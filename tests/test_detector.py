@@ -1,9 +1,9 @@
 import unittest
 
-from custom_components.battery_cross_charge_guard.detector import CrossChargeDetector
-from custom_components.battery_cross_charge_guard.diagnostics import build_diagnostics, diagnostics_payload
-from custom_components.battery_cross_charge_guard.models import BatteryState
-from custom_components.battery_cross_charge_guard.repair import build_repair_issue
+from custom_components.solax_cross_battery_guard.detector import CrossChargeDetector
+from custom_components.solax_cross_battery_guard.diagnostics import build_diagnostics, diagnostics_payload
+from custom_components.solax_cross_battery_guard.models import BatteryState
+from custom_components.solax_cross_battery_guard.repair import build_repair_issue
 
 
 class DetectorTests(unittest.TestCase):

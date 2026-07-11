@@ -1,6 +1,6 @@
 """Constants for SolaX cross battery guard."""
 
-DOMAIN = "battery_cross_charge_guard"
+DOMAIN = "solax_cross_battery_guard"
 PLATFORMS: list[str] = []
 CONF_CREATE_DASHBOARD = "create_dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"

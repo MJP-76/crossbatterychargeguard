@@ -9,7 +9,7 @@ Current release: `0.1.4`.
 
 ## Included
 
-- `custom_components/battery_cross_charge_guard/`
+- `custom_components/solax_cross_battery_guard/`
 - battery registry
 - rule engine
 - diagnostics

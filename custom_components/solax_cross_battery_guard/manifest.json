@@ -1,5 +1,5 @@
 {
-  "domain": "battery_cross_charge_guard",
+  "domain": "solax_cross_battery_guard",
   "name": "SolaX cross battery guard",
   "version": "0.1.4",
   "documentation": "https://github.com/MJP-76/ha-solax-cross-battery-guard",
