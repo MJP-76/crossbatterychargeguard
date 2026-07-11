@@ -1,4 +1,4 @@
-"""Battery Cross Charge Guard integration."""
+"""SolaX cross battery guard integration."""
 
 from __future__ import annotations
 

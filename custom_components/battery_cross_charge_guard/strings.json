@@ -1,9 +1,9 @@
 {
-  "title": "Battery Cross Charge Guard",
+  "title": "SolaX cross battery guard",
   "config": {
     "step": {
       "user": {
-        "title": "Set up Battery Cross Charge Guard",
+        "title": "Set up SolaX cross battery guard",
         "description": "Choose the battery, house load, and control entities for each battery.",
         "data": {
           "create_dashboard": "Create dashboard automatically",

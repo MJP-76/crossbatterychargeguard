@@ -1,4 +1,4 @@
-# ha-solax-cross-battery-guard
+# SolaX cross battery guard
 
 Home Assistant custom component for guarding against cross-charging between batteries.
 

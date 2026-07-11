@@ -1,4 +1,4 @@
-"""Constants for Battery Cross Charge Guard."""
+"""Constants for SolaX cross battery guard."""
 
 DOMAIN = "battery_cross_charge_guard"
 PLATFORMS: list[str] = []
@@ -22,5 +22,5 @@ DEFAULT_MAX_SOC_DIFFERENCE = 30.0
 DEFAULT_LOOP_DURATION = 300
 DEFAULT_MAX_BATTERY_TEMP = 50.0
 DEFAULT_CREATE_DASHBOARD = True
-DEFAULT_DASHBOARD_TITLE = "Battery Cross Charge Guard"
+DEFAULT_DASHBOARD_TITLE = "SolaX cross battery guard"
 DEFAULT_DASHBOARD_URL_PATH = "battery-cross-charge-guard"

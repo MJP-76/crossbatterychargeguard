@@ -1,5 +1,5 @@
 {
-  "name": "Battery Cross Charge Guard",
+  "name": "SolaX cross battery guard",
   "content_in_root": false,
   "domains": ["sensor", "binary_sensor"]
 }
