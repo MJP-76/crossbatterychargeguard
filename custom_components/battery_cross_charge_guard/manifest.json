@@ -1,7 +1,7 @@
 {
   "domain": "battery_cross_charge_guard",
   "name": "Battery Cross Charge Guard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "documentation": "https://github.com/MJP-76/ha-solax-cross-battery-guard",
   "codeowners": ["@MJP-76"],
   "config_flow": true,
