@@ -1,0 +1,5 @@
+{
+  "name": "Battery Cross Charge Guard",
+  "content_in_root": false,
+  "domains": ["sensor", "binary_sensor"]
+}
