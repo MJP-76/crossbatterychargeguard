@@ -43,11 +43,13 @@ async def _async_ensure_dashboard(hass: HomeAssistant, entry: ConfigEntry) -> No
         CONF_SHOW_IN_SIDEBAR: True,
         CONF_REQUIRE_ADMIN: False,
     }
+    dashboard_config = build_dashboard_config(hass, entry)
+    dashboard_config["id"] = url_path
     lovelace_store = hass.data[LOVELACE_DATA].dashboards.get(url_path)
     if lovelace_store is None:
         lovelace_store = lovelace_dashboard.LovelaceStorage(hass, item)
         hass.data[LOVELACE_DATA].dashboards[url_path] = lovelace_store
-    await lovelace_store.async_save(build_dashboard_config(hass, entry))
+    await lovelace_store.async_save(dashboard_config)
     hass.bus.async_fire("lovelace_updated", {"url_path": url_path, "updated": True})
     from homeassistant.components import frontend
 
