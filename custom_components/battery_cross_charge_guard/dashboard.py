@@ -81,31 +81,39 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "type": "vertical-stack",
                         "cards": [
                             {
-                                "type": "markdown",
-                                "content": (
-                                    "## Rules in place\n"
-                                    "- Cross-charge detection when one battery is pushing charge into another\n"
-                                    "- SOC divergence detection when batteries drift too far apart\n"
-                                    "- Thermal protection when battery temperature is too high\n"
-                                ),
+                                "type": "entities",
+                                "title": "Rules in place",
+                                "entities": [
+                                    {
+                                        "entity": data[CONF_BATTERY_A_SOC],
+                                        "name": "Cross-charge detection",
+                                    },
+                                    {
+                                        "entity": data[CONF_BATTERY_B_SOC],
+                                        "name": "SOC divergence detection",
+                                    },
+                                    {
+                                        "entity": data[CONF_BATTERY_A_POWER],
+                                        "name": "Thermal protection / control",
+                                    },
+                                ],
                             },
                             {
-                                "type": "markdown",
-                                "content": (
-                                    "## Current control\n"
-                                    f"- {battery_a_name}: follow SOC / power / current-limit / house-load inputs\n"
-                                    f"- {battery_b_name}: follow SOC / power / current-limit / house-load inputs\n"
-                                    "- Control logic should keep the batteries balanced and flag cross-charge conditions"
-                                ),
+                                "type": "gauge",
+                                "title": "Current control",
+                                "entity": data[CONF_BATTERY_A_POWER],
+                                "min": -5000,
+                                "max": 5000,
+                                "severity": {"green": 0, "yellow": 1500, "red": 3000},
                             },
                             {
-                                "type": "markdown",
-                                "content": (
-                                    "## Analysis\n"
-                                    "- The manager evaluates the battery registry and runs the rule engine\n"
-                                    "- Diagnostics summarize battery count, cross-charge events, SOC imbalance, and transfer size\n"
-                                    "- Repairs are generated when cross-charge or critical conditions are detected"
-                                ),
+                                "type": "entities",
+                                "title": "Analysis",
+                                "entities": [
+                                    {"entity": data[CONF_BATTERY_A_SOC], "name": "Battery count / registry"},
+                                    {"entity": data[CONF_BATTERY_B_SOC], "name": "Cross-charge events / imbalance"},
+                                    {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Repair status / control issue"},
+                                ],
                             },
                             {
                                 "type": "history-graph",
