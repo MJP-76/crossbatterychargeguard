@@ -43,3 +43,9 @@ class DetectorResult:
     max_soc_difference: float
     battery_count: int
 
+
+@dataclass(slots=True, frozen=True)
+class AnalysisReport:
+    result: DetectorResult
+    diagnostics: dict[str, object]
+    repair_issue: dict[str, object] | None

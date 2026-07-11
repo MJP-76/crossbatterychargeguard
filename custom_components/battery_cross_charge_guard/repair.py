@@ -27,3 +27,12 @@ def build_repair_issue(snapshot: DiagnosticsSnapshot) -> RepairIssue | None:
         severity="critical" if snapshot.critical else "warning",
     )
 
+
+def repair_issue_payload(issue: RepairIssue | None) -> dict[str, object] | None:
+    if issue is None:
+        return None
+    return {
+        "title": issue.title,
+        "body": issue.body,
+        "severity": issue.severity,
+    }

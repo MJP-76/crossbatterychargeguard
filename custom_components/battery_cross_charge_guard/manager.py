@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 
 from .diagnostics import DiagnosticsSnapshot, build_diagnostics
 from .detector import CrossChargeDetector
-from .models import BatteryState, DetectorResult
-from .repair import RepairIssue, build_repair_issue
+from .models import AnalysisReport, BatteryState, DetectorResult
+from .repair import build_repair_issue, repair_issue_payload
 from .registry import BatteryRegistry
 
 
@@ -26,8 +26,18 @@ class BatteryManager:
         self.detector.registry = self.registry
         return self.detector.detect()
 
-    def analyze(self) -> tuple[DetectorResult, DiagnosticsSnapshot, RepairIssue | None]:
+    def analyze(self) -> AnalysisReport:
         result = self.detect()
         snapshot = build_diagnostics(result)
         issue = build_repair_issue(snapshot)
-        return result, snapshot, issue
+        return AnalysisReport(
+            result=result,
+            diagnostics={
+                "battery_count": snapshot.battery_count,
+                "cross_charge_events": snapshot.cross_charge_events,
+                "largest_transfer": snapshot.largest_transfer,
+                "imbalance": snapshot.imbalance,
+                "critical": snapshot.critical,
+            },
+            repair_issue=repair_issue_payload(issue),
+        )

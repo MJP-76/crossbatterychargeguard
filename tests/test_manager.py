@@ -19,11 +19,11 @@ class ManagerTests(unittest.TestCase):
         manager = BatteryManager()
         manager.update_battery(BatteryState("a", "Battery A", 95, 50, 0, 100, False, False, 55, True))
 
-        result, snapshot, issue = manager.analyze()
+        report = manager.analyze()
 
-        self.assertEqual(result.battery_count, 1)
-        self.assertTrue(snapshot.critical)
-        self.assertIsNotNone(issue)
+        self.assertEqual(report.result.battery_count, 1)
+        self.assertTrue(report.diagnostics["critical"])
+        self.assertIsNotNone(report.repair_issue)
 
 
 if __name__ == "__main__":
