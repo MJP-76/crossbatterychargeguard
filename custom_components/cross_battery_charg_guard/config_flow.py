@@ -1,4 +1,4 @@
-"""Compatibility config flow for the old battery_cross_charge_guard handler."""
+"""Config flow for Cross Battery Charg Guard."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
 
-from custom_components.cross_battery_charg_guard.const import (
+from .const import (
     CONF_BATTERY_A_CURRENT_LIMIT,
     CONF_BATTERY_A_HOUSE_LOAD,
     CONF_BATTERY_A_NAME,
@@ -23,9 +23,9 @@ from custom_components.cross_battery_charg_guard.const import (
     DEFAULT_CREATE_DASHBOARD,
     DEFAULT_DASHBOARD_TITLE,
     DEFAULT_DASHBOARD_URL_PATH,
+    DOMAIN,
 )
 
-DOMAIN = "battery_cross_charge_guard"
 ENTITY_SELECTOR = selector.EntitySelector(selector.EntitySelectorConfig())
 
 
@@ -50,7 +50,7 @@ def _step_schema(defaults: dict[str, str | bool]) -> vol.Schema:
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle the legacy config flow."""
+    """Handle a config flow."""
 
     VERSION = 1
 
@@ -65,7 +65,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
-    """Legacy options flow."""
+    """Options flow for editing the integration."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         self.config_entry = config_entry

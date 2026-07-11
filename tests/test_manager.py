@@ -1,7 +1,7 @@
 import unittest
 
-from custom_components.solax_cross_battery_guard.manager import BatteryManager
-from custom_components.solax_cross_battery_guard.models import BatteryState
+from custom_components.cross_battery_charg_guard.manager import BatteryManager
+from custom_components.cross_battery_charg_guard.models import BatteryState
 
 
 class ManagerTests(unittest.TestCase):
