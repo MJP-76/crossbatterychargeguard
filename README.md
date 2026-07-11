@@ -11,7 +11,7 @@ Current release: `0.1.14`.
 
 ## Included
 
-- `custom_components/cross_battery_charg_guard/`
+- `custom_components/cross_battery_charge_guard/`
 - battery registry
 - rule engine
 - diagnostics
