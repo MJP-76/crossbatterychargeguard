@@ -1,8 +1,8 @@
 {
   "domain": "battery_cross_charge_guard",
   "name": "Cross Battery Charge Guard",
-  "version": "0.1.8",
-  "documentation": "https://github.com/MJP-76/cross-battery-charg-guard",
+  "version": "0.1.11",
+  "documentation": "https://github.com/MJP-76/crossbatterychargeguard",
   "codeowners": ["@MJP-76"],
   "config_flow": true,
   "iot_class": "calculated",
