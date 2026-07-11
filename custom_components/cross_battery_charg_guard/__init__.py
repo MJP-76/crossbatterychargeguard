@@ -1,4 +1,4 @@
-"""Cross Battery Charg Guard integration."""
+"""Cross Battery Charge Guard integration."""
 
 from __future__ import annotations
 

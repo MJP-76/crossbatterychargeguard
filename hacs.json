@@ -1,5 +1,5 @@
 {
-  "name": "Cross Battery Charg Guard",
+  "name": "Cross Battery Charge Guard",
   "content_in_root": false,
   "domains": ["sensor", "binary_sensor"]
 }

@@ -1,9 +1,9 @@
 {
-  "title": "Cross Battery Charg Guard",
+  "title": "Cross Battery Charge Guard",
   "config": {
     "step": {
       "user": {
-        "title": "Set up Cross Battery Charg Guard",
+        "title": "Set up Cross Battery Charge Guard",
         "description": "Choose the battery, house load, and control entities for each battery.",
         "data": {
           "create_dashboard": "Create dashboard automatically",
