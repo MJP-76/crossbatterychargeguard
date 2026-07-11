@@ -53,12 +53,81 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "type": "markdown",
                         "content": (
                             "# Battery Cross Charge Guard\n"
-                            "Track state of charge, power flow, house load, and current limits."
+                            "Live view of each battery, house load, current limits, and cross-charge status."
                         ),
                     },
                     {
-                        "type": "glance",
-                        "title": "System",
+                        "type": "gauge",
+                        "name": f"{battery_a_name} SOC",
+                        "entity": data[CONF_BATTERY_A_SOC],
+                        "min": 0,
+                        "max": 100,
+                        "severity": {"green": 50, "yellow": 20, "red": 10},
+                    },
+                    {
+                        "type": "gauge",
+                        "name": f"{battery_b_name} SOC",
+                        "entity": data[CONF_BATTERY_B_SOC],
+                        "min": 0,
+                        "max": 100,
+                        "severity": {"green": 50, "yellow": 20, "red": 10},
+                    },
+                    {
+                        "type": "entities",
+                        "title": "Battery A",
+                        "entities": [
+                            {"entity": data[CONF_BATTERY_A_POWER], "name": "Power"},
+                            {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Current Limit"},
+                            {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": "House Load"},
+                        ],
+                    },
+                    {
+                        "type": "entities",
+                        "title": "Battery B",
+                        "entities": [
+                            {"entity": data[CONF_BATTERY_B_POWER], "name": "Power"},
+                            {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": "Current Limit"},
+                            {"entity": data[CONF_BATTERY_B_HOUSE_LOAD], "name": "House Load"},
+                        ],
+                    },
+                    {
+                        "type": "horizontal-stack",
+                        "cards": [
+                            {
+                                "type": "entity",
+                                "entity": data[CONF_BATTERY_A_SOC],
+                                "name": f"{battery_a_name} SOC",
+                            },
+                            {
+                                "type": "entity",
+                                "entity": data[CONF_BATTERY_B_SOC],
+                                "name": f"{battery_b_name} SOC",
+                            },
+                        ],
+                    },
+                    {
+                        "type": "history-graph",
+                        "title": "SOC Trend",
+                        "hours_to_show": 24,
+                        "refresh_interval": 60,
+                        "entities": [
+                            {"entity": data[CONF_BATTERY_A_SOC], "name": battery_a_name},
+                            {"entity": data[CONF_BATTERY_B_SOC], "name": battery_b_name},
+                        ],
+                    },
+                    {
+                        "type": "history-graph",
+                        "title": "Power Trend",
+                        "hours_to_show": 24,
+                        "refresh_interval": 60,
+                        "entities": [
+                            {"entity": data[CONF_BATTERY_A_POWER], "name": battery_a_name},
+                            {"entity": data[CONF_BATTERY_B_POWER], "name": battery_b_name},
+                        ],
+                    },
+                    {
+                        "type": "entities",
+                        "title": "Selected Inputs",
                         "entities": [
                             {"entity": data[CONF_BATTERY_A_SOC], "name": f"{battery_a_name} SOC"},
                             {"entity": data[CONF_BATTERY_A_POWER], "name": f"{battery_a_name} Power"},
@@ -74,4 +143,3 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
             }
         ],
     }
-
