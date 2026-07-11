@@ -16,7 +16,6 @@ The repo also includes a ready-to-import Lovelace dashboard template in `lovelac
 - repairs helper
 - manifest and packaging metadata
 - tests
-- `lovelace-dashboard.yaml` sample dashboard view for Home Assistant import
 - config flow for selecting battery entities and dashboard settings
 
 ## Deferred
