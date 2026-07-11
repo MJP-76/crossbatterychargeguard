@@ -3,6 +3,7 @@
 Home Assistant custom component for guarding against cross-charging between batteries.
 
 HACS-compatible metadata is included at the repository root in `hacs.json`.
+The integration can create a Lovelace dashboard automatically from the entities you choose during setup.
 The repo also includes a ready-to-import Lovelace dashboard template in `lovelace-dashboard.yaml`.
 
 ## Included
@@ -15,6 +16,7 @@ The repo also includes a ready-to-import Lovelace dashboard template in `lovelac
 - manifest and packaging metadata
 - tests
 - `lovelace-dashboard.yaml` sample dashboard view for Home Assistant import
+- config flow for selecting battery entities and dashboard settings
 
 ## Deferred
 
