@@ -81,6 +81,33 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "type": "vertical-stack",
                         "cards": [
                             {
+                                "type": "markdown",
+                                "content": (
+                                    "## Rules in place\n"
+                                    "- Cross-charge detection when one battery is pushing charge into another\n"
+                                    "- SOC divergence detection when batteries drift too far apart\n"
+                                    "- Thermal protection when battery temperature is too high\n"
+                                ),
+                            },
+                            {
+                                "type": "markdown",
+                                "content": (
+                                    "## Current control\n"
+                                    f"- {battery_a_name}: follow SOC / power / current-limit / house-load inputs\n"
+                                    f"- {battery_b_name}: follow SOC / power / current-limit / house-load inputs\n"
+                                    "- Control logic should keep the batteries balanced and flag cross-charge conditions"
+                                ),
+                            },
+                            {
+                                "type": "markdown",
+                                "content": (
+                                    "## Analysis\n"
+                                    "- The manager evaluates the battery registry and runs the rule engine\n"
+                                    "- Diagnostics summarize battery count, cross-charge events, SOC imbalance, and transfer size\n"
+                                    "- Repairs are generated when cross-charge or critical conditions are detected"
+                                ),
+                            },
+                            {
                                 "type": "history-graph",
                                 "title": "SOC Trend",
                                 "hours_to_show": 24,
