@@ -37,6 +37,7 @@ async def _async_ensure_dashboard(hass: HomeAssistant, entry: ConfigEntry) -> No
     title = dashboard_title(entry)
     url_path = dashboard_url_path(entry)
     item = {
+        "id": url_path,
         CONF_TITLE: title,
         CONF_URL_PATH: url_path,
         CONF_ICON: "mdi:battery",
