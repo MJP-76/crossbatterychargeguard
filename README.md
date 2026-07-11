@@ -2,6 +2,8 @@
 
 Home Assistant custom component for guarding against cross-charging between batteries.
 
+Repository: `MJP-76/crossbatterychargeguard`
+
 HACS-compatible metadata is included at the repository root in `hacs.json`.
 The integration can create a Lovelace dashboard automatically from the entities you choose during setup, with separate battery blocks and live SOC/power trend cards.
 It is configured through Home Assistant's UI config flow, not `configuration.yaml`.
