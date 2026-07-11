@@ -70,13 +70,29 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         ],
                     },
                     {
-                        "type": "entities",
+                        "type": "history-graph",
                         "title": "Trends and Selected Inputs",
+                        "hours_to_show": 24,
+                        "refresh_interval": 60,
                         "entities": [
                             {"entity": data[CONF_BATTERY_A_SOC], "name": f"{battery_a_name} SOC"},
                             {"entity": data[CONF_BATTERY_B_SOC], "name": f"{battery_b_name} SOC"},
+                        ],
+                    },
+                    {
+                        "type": "history-graph",
+                        "title": "Power Trend",
+                        "hours_to_show": 24,
+                        "refresh_interval": 60,
+                        "entities": [
                             {"entity": data[CONF_BATTERY_A_POWER], "name": f"{battery_a_name} Power"},
                             {"entity": data[CONF_BATTERY_B_POWER], "name": f"{battery_b_name} Power"},
+                        ],
+                    },
+                    {
+                        "type": "entities",
+                        "title": "Selected Inputs",
+                        "entities": [
                             {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": f"{battery_a_name} Current Limit"},
                             {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": f"{battery_b_name} Current Limit"},
                             {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": f"{battery_a_name} House Load"},
