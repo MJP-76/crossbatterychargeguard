@@ -50,13 +50,6 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                 "icon": "mdi:battery",
                 "cards": [
                     {
-                        "type": "markdown",
-                        "content": (
-                            "# Battery Cross Charge Guard\n"
-                            "Live view of each battery, house load, current limits, and cross-charge status."
-                        ),
-                    },
-                    {
                         "type": "horizontal-stack",
                         "cards": [
                             {
