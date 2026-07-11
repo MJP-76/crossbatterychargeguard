@@ -13,6 +13,7 @@ HACS-compatible metadata is included at the repository root in `hacs.json`.
 - repairs helper
 - manifest and packaging metadata
 - tests
+- `lovelace-dashboard.yaml` sample dashboard view
 
 ## Deferred
 

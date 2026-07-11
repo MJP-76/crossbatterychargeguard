@@ -1,0 +1,63 @@
+title: Battery Cross Charge Guard
+views:
+  - title: Batteries
+    path: batteries
+    icon: mdi:battery
+    cards:
+      - type: markdown
+        content: |
+          # Battery Cross Charge Guard
+          Track each battery's state, detected cross-charge events, and the overall health of the system.
+      - type: glance
+        title: System Status
+        entities:
+          - entity: sensor.battery_count
+            name: Batteries
+          - entity: sensor.active_cross_charge_events
+            name: Active Events
+          - entity: sensor.maximum_soc_difference
+            name: SOC Delta
+          - entity: binary_sensor.cross_charging_detected
+            name: Cross-Charging
+          - entity: binary_sensor.battery_imbalance
+            name: Imbalance
+          - entity: binary_sensor.system_healthy
+            name: Healthy
+      - type: history-graph
+        title: Battery SOC
+        hours_to_show: 24
+        refresh_interval: 60
+        entities:
+          - entity: sensor.battery_a_soc
+            name: Battery A SOC
+          - entity: sensor.battery_b_soc
+            name: Battery B SOC
+      - type: history-graph
+        title: Battery Power
+        hours_to_show: 24
+        refresh_interval: 60
+        entities:
+          - entity: sensor.battery_a_power
+            name: Battery A Power
+          - entity: sensor.battery_b_power
+            name: Battery B Power
+      - type: entities
+        title: Battery Details
+        entities:
+          - entity: sensor.battery_a_voltage
+            name: Battery A Voltage
+          - entity: sensor.battery_a_current
+            name: Battery A Current
+          - entity: sensor.battery_a_temperature
+            name: Battery A Temperature
+          - entity: sensor.battery_b_voltage
+            name: Battery B Voltage
+          - entity: sensor.battery_b_current
+            name: Battery B Current
+          - entity: sensor.battery_b_temperature
+            name: Battery B Temperature
+      - type: logbook
+        title: Cross-Charge Events
+        entities:
+          - binary_sensor.cross_charging_detected
+          - binary_sensor.battery_imbalance
