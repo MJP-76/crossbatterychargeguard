@@ -4,6 +4,7 @@ Home Assistant custom component for guarding against cross-charging between batt
 
 HACS-compatible metadata is included at the repository root in `hacs.json`.
 The integration can create a Lovelace dashboard automatically from the entities you choose during setup, with graphical SOC gauges, battery cards, and live trend graphs.
+It is configured through Home Assistant's UI config flow, not `configuration.yaml`.
 The repo also includes a ready-to-import Lovelace dashboard template in `lovelace-dashboard.yaml`.
 
 ## Included
