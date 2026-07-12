@@ -1,10 +1,28 @@
 {
   "title": "Cross Battery Charge Guard",
+  "entity": {
+    "sensor": {
+      "stop_event_count": {
+        "name": "Stop Event Count",
+        "state": "Stop events recorded",
+        "attributes": {
+          "latest_timestamp": "Latest stop timestamp",
+          "latest_battery": "Latest stop battery",
+          "latest_reason": "Latest stop reason",
+          "latest_status": "Latest stop status"
+        }
+      },
+      "last_stop_summary": {
+        "name": "Last Stop",
+        "state": "Latest stop event summary"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
         "title": "Set up Cross Battery Charge Guard",
-        "description": "Choose the battery, house load, and control entities for each battery.",
+        "description": "Choose the battery, house load, and control entities for each battery. The dashboard can show stop history from Home Assistant recorder.",
         "data": {
           "create_dashboard": "Create dashboard automatically",
           "dashboard_title": "Dashboard title",
