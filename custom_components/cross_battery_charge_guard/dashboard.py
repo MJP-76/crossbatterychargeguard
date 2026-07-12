@@ -56,59 +56,65 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "type": "horizontal-stack",
                         "cards": [
                             {
-                                "type": "entities",
-                                "title": f"🔋 {battery_a_name}",
-                                "entities": [
-                                    {"entity": data[CONF_BATTERY_A_SOC], "name": "SOC"},
-                                    {"entity": data[CONF_BATTERY_A_POWER], "name": "Power"},
-                                    {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Current Limit"},
-                                    {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": "House Load"},
-                                    {"entity": data[CONF_BATTERY_A_SOC], "name": "Status"},
+                                "type": "vertical-stack",
+                                "cards": [
+                                    {
+                                        "type": "history-graph",
+                                        "title": "📝 Stop History",
+                                        "hours_to_show": 24,
+                                        "refresh_interval": 60,
+                                        "entities": [
+                                            {
+                                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
+                                                "name": "Stop Event Count",
+                                            }
+                                        ],
+                                    },
+                                    {
+                                        "type": "markdown",
+                                        "content": "## 🧾 Last Stop Details\n- Sensor: `sensor.cross_battery_charge_guard_last_stop`\n- Count sensor: `sensor.cross_battery_charge_guard_stop_event_count`\n- Use the sensor attributes for timestamp, battery, reason, and status",
+                                    },
+                                    {
+                                        "type": "markdown",
+                                        "content": "## 🛡️ Rules in Place\n- Cross-charge detection\n- SOC divergence detection\n- Thermal protection",
+                                    },
+                                    {
+                                        "type": "markdown",
+                                        "content": "## ⚙️ Current Control\n- Battery A: aligned\n- Battery B: aligned\n- Control goal: keep batteries aligned",
+                                    },
+                                    {
+                                        "type": "markdown",
+                                        "content": "## 📊 Analysis\n- Battery count: 2\n- Cross-charge events: 1\n- Imbalance: 14%\n- Repair: warning ⚠️",
+                                    },
                                 ],
                             },
                             {
-                                "type": "entities",
-                                "title": f"🔋 {battery_b_name}",
-                                "entities": [
-                                    {"entity": data[CONF_BATTERY_B_SOC], "name": "SOC"},
-                                    {"entity": data[CONF_BATTERY_B_POWER], "name": "Power"},
-                                    {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": "Current Limit"},
-                                    {"entity": data[CONF_BATTERY_B_HOUSE_LOAD], "name": "House Load"},
-                                    {"entity": data[CONF_BATTERY_B_SOC], "name": "Status"},
+                                "type": "vertical-stack",
+                                "cards": [
+                                    {
+                                        "type": "entities",
+                                        "title": f"🔋 {battery_a_name}",
+                                        "entities": [
+                                            {"entity": data[CONF_BATTERY_A_SOC], "name": "SOC"},
+                                            {"entity": data[CONF_BATTERY_A_POWER], "name": "Power"},
+                                            {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Current Limit"},
+                                            {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": "House Load"},
+                                            {"entity": data[CONF_BATTERY_A_SOC], "name": "Status"},
+                                        ],
+                                    },
+                                    {
+                                        "type": "entities",
+                                        "title": f"🔋 {battery_b_name}",
+                                        "entities": [
+                                            {"entity": data[CONF_BATTERY_B_SOC], "name": "SOC"},
+                                            {"entity": data[CONF_BATTERY_B_POWER], "name": "Power"},
+                                            {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": "Current Limit"},
+                                            {"entity": data[CONF_BATTERY_B_HOUSE_LOAD], "name": "House Load"},
+                                            {"entity": data[CONF_BATTERY_B_SOC], "name": "Status"},
+                                        ],
+                                    },
                                 ],
                             },
-                        ],
-                    },
-                    {
-                        "type": "markdown",
-                        "content": "## 🛡️ Rules in Place\n- Cross-charge detection\n- SOC divergence detection\n- Thermal protection",
-                    },
-                    {
-                        "type": "markdown",
-                        "content": "## ⚙️ Current Control\n- Battery A: aligned\n- Battery B: aligned\n- Control goal: keep batteries aligned",
-                    },
-                    {
-                        "type": "markdown",
-                        "content": "## 📊 Analysis\n- Battery count: 2\n- Cross-charge events: 1\n- Imbalance: 14%\n- Repair: warning ⚠️",
-                    },
-                    {
-                        "type": "markdown",
-                        "content": "## 📝 Stop Log\n- Recorder-backed stop history sensor\n- Latest details are in the sensor attributes\n- Check the Stop History graph for when charging was stopped",
-                    },
-                    {
-                        "type": "markdown",
-                        "content": "## 🧾 Last Stop Details\n- Sensor: `sensor.cross_battery_charge_guard_last_stop`\n- Count sensor: `sensor.cross_battery_charge_guard_stop_event_count`\n- Use the sensor attributes for timestamp, battery, reason, and status",
-                    },
-                    {
-                        "type": "history-graph",
-                        "title": "📝 Stop History",
-                        "hours_to_show": 24,
-                        "refresh_interval": 60,
-                        "entities": [
-                            {
-                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
-                                "name": "Stop Event Count",
-                            }
                         ],
                     },
                     {
