@@ -42,6 +42,8 @@ async def async_setup_entry(hass, entry) -> bool:
         if lovelace_store is None:
             lovelace_store = lovelace_dashboard.LovelaceStorage(hass, item)
             hass.data[LOVELACE_DATA].dashboards[url_path] = lovelace_store
+        else:
+            hass.data[LOVELACE_DATA].dashboards[url_path] = lovelace_store
         await lovelace_store.async_save(dashboard_config)
         hass.bus.async_fire("lovelace_updated", {"url_path": url_path, "updated": True})
         frontend.async_register_built_in_panel(

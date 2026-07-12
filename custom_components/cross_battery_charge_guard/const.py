@@ -1,7 +1,7 @@
 """Constants for Cross Battery Charge Guard."""
 
 DOMAIN = "cross_battery_charge_guard"
-PLATFORMS: list[str] = []
+PLATFORMS: list[str] = ["sensor"]
 CONF_CREATE_DASHBOARD = "create_dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"
 CONF_DASHBOARD_URL_PATH = "dashboard_url_path"
