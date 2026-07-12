@@ -25,6 +25,17 @@ class ManagerTests(unittest.TestCase):
         self.assertTrue(report.diagnostics["critical"])
         self.assertIsNotNone(report.repair_issue)
 
+    def test_record_stop_event_tracks_history(self):
+        manager = BatteryManager()
+        manager.record_stop_event("battery-a", "cross-charge", "warning")
+
+        log = manager.stop_log()
+
+        self.assertEqual(len(log), 1)
+        self.assertEqual(log[0].battery, "battery-a")
+        self.assertEqual(log[0].reason, "cross-charge")
+        self.assertEqual(log[0].status, "warning")
+
 
 if __name__ == "__main__":
     unittest.main()

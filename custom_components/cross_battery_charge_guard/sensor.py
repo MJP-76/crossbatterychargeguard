@@ -33,11 +33,21 @@ class StopEventSensor(SensorEntity):
     def extra_state_attributes(self) -> dict[str, object]:
         events = self._manager.stop_log()
         latest = events[0] if events else None
+        recent = [
+            {
+                "timestamp": event.timestamp,
+                "battery": event.battery,
+                "reason": event.reason,
+                "status": event.status,
+            }
+            for event in events[:5]
+        ]
         return {
             "latest_timestamp": getattr(latest, "timestamp", None),
             "latest_battery": getattr(latest, "battery", None),
             "latest_reason": getattr(latest, "reason", None),
             "latest_status": getattr(latest, "status", None),
+            "recent_events": recent,
         }
 
     def refresh(self) -> None:

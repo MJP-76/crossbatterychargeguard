@@ -93,7 +93,7 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                     },
                     {
                         "type": "markdown",
-                        "content": "## 📝 Stop Log\n- Recorder-backed stop history sensor\n- The latest stop event is stored as sensor history\n- Use this section to review when charging was stopped",
+                        "content": "## 📝 Stop Log\n- Recorder-backed stop history sensor\n- Latest details are in the sensor attributes\n- Check the Stop History graph for when charging was stopped",
                     },
                     {
                         "type": "entities",
