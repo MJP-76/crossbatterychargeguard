@@ -38,6 +38,14 @@ class CrossChargeEvent:
 
 
 @dataclass(slots=True, frozen=True)
+class StopEvent:
+    timestamp: str
+    battery: str
+    reason: str
+    status: str
+
+
+@dataclass(slots=True, frozen=True)
 class DetectorResult:
     events: list[CrossChargeEvent]
     max_soc_difference: float

@@ -92,6 +92,10 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "content": "## 📊 Analysis\n- Battery count: 2\n- Cross-charge events: 1\n- Imbalance: 14%\n- Repair: warning ⚠️",
                     },
                     {
+                        "type": "markdown",
+                        "content": "## 📝 Stop Log\n- No stop events recorded yet\n- When a stop event is recorded, the latest entries will appear here\n- This keeps the dashboard aligned with the most recent control stop",
+                    },
+                    {
                         "type": "vertical-stack",
                         "cards": [
                             {

@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 
 from .diagnostics import DiagnosticsSnapshot, build_diagnostics
 from .detector import CrossChargeDetector
-from .models import AnalysisReport, BatteryState, DetectorResult
+from .models import AnalysisReport, BatteryState, DetectorResult, StopEvent
 from .repair import build_repair_issue, repair_issue_payload
 from .registry import BatteryRegistry
 
@@ -17,6 +19,7 @@ class BatteryManager:
 
     registry: BatteryRegistry = field(default_factory=BatteryRegistry)
     detector: CrossChargeDetector = field(default_factory=CrossChargeDetector)
+    stop_events: deque[StopEvent] = field(default_factory=lambda: deque(maxlen=10))
 
     def update_battery(self, battery: BatteryState) -> None:
         self.registry.upsert(battery)
@@ -41,3 +44,16 @@ class BatteryManager:
             },
             repair_issue=repair_issue_payload(issue),
         )
+
+    def record_stop_event(self, battery: str, reason: str, status: str) -> None:
+        self.stop_events.appendleft(
+            StopEvent(
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                battery=battery,
+                reason=reason,
+                status=status,
+            )
+        )
+
+    def stop_log(self) -> list[StopEvent]:
+        return list(self.stop_events)
