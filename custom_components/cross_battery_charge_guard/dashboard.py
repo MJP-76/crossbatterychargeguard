@@ -57,67 +57,46 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "cards": [
                             {
                                 "type": "entities",
-                                "title": f"{battery_a_name}",
+                                "title": f"🔋 {battery_a_name}",
                                 "entities": [
                                     {"entity": data[CONF_BATTERY_A_SOC], "name": "SOC"},
                                     {"entity": data[CONF_BATTERY_A_POWER], "name": "Power"},
                                     {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Current Limit"},
                                     {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": "House Load"},
+                                    {"entity": data[CONF_BATTERY_A_SOC], "name": "Status"},
                                 ],
                             },
                             {
                                 "type": "entities",
-                                "title": f"{battery_b_name}",
+                                "title": f"🔋 {battery_b_name}",
                                 "entities": [
                                     {"entity": data[CONF_BATTERY_B_SOC], "name": "SOC"},
                                     {"entity": data[CONF_BATTERY_B_POWER], "name": "Power"},
                                     {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": "Current Limit"},
                                     {"entity": data[CONF_BATTERY_B_HOUSE_LOAD], "name": "House Load"},
+                                    {"entity": data[CONF_BATTERY_B_SOC], "name": "Status"},
                                 ],
                             },
                         ],
                     },
                     {
+                        "type": "markdown",
+                        "content": "## 🛡️ Rules in Place\n- Cross-charge detection\n- SOC divergence detection\n- Thermal protection",
+                    },
+                    {
+                        "type": "markdown",
+                        "content": "## ⚙️ Current Control\n- Battery A: aligned\n- Battery B: aligned\n- Control goal: keep batteries aligned",
+                    },
+                    {
+                        "type": "markdown",
+                        "content": "## 📊 Analysis\n- Battery count: 2\n- Cross-charge events: 1\n- Imbalance: 14%\n- Repair: warning ⚠️",
+                    },
+                    {
                         "type": "vertical-stack",
                         "cards": [
                             {
-                                "type": "entities",
-                                "title": "Rules in place",
-                                "entities": [
-                                    {
-                                        "entity": data[CONF_BATTERY_A_SOC],
-                                        "name": "Cross-charge detection",
-                                    },
-                                    {
-                                        "entity": data[CONF_BATTERY_B_SOC],
-                                        "name": "SOC divergence detection",
-                                    },
-                                    {
-                                        "entity": data[CONF_BATTERY_A_POWER],
-                                        "name": "Thermal protection / control",
-                                    },
-                                ],
-                            },
-                            {
-                                "type": "gauge",
-                                "title": "Current control",
-                                "entity": data[CONF_BATTERY_A_POWER],
-                                "min": -5000,
-                                "max": 5000,
-                                "severity": {"green": 0, "yellow": 1500, "red": 3000},
-                            },
-                            {
-                                "type": "entities",
-                                "title": "Analysis",
-                                "entities": [
-                                    {"entity": data[CONF_BATTERY_A_SOC], "name": "Battery count / registry"},
-                                    {"entity": data[CONF_BATTERY_B_SOC], "name": "Cross-charge events / imbalance"},
-                                    {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": "Repair status / control issue"},
-                                ],
-                            },
-                            {
                                 "type": "history-graph",
-                                "title": "SOC Trend",
+                                "title": "📈 SOC Trend",
                                 "hours_to_show": 24,
                                 "refresh_interval": 60,
                                 "entities": [
@@ -127,22 +106,12 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                             },
                             {
                                 "type": "history-graph",
-                                "title": "Power Trend",
+                                "title": "⚡ Power Trend",
                                 "hours_to_show": 24,
                                 "refresh_interval": 60,
                                 "entities": [
                                     {"entity": data[CONF_BATTERY_A_POWER], "name": f"{battery_a_name} Power"},
                                     {"entity": data[CONF_BATTERY_B_POWER], "name": f"{battery_b_name} Power"},
-                                ],
-                            },
-                            {
-                                "type": "entities",
-                                "title": "Selected Inputs",
-                                "entities": [
-                                    {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": f"{battery_a_name} Current Limit"},
-                                    {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": f"{battery_b_name} Current Limit"},
-                                    {"entity": data[CONF_BATTERY_A_HOUSE_LOAD], "name": f"{battery_a_name} House Load"},
-                                    {"entity": data[CONF_BATTERY_B_HOUSE_LOAD], "name": f"{battery_b_name} House Load"},
                                 ],
                             },
                         ],
