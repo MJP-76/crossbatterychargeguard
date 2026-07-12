@@ -54,12 +54,41 @@ class StopEventSensor(SensorEntity):
         self.async_write_ha_state()
 
 
+class StopEventSummarySensor(SensorEntity):
+    _attr_has_entity_name = True
+    _attr_name = "Cross Battery Charge Guard Last Stop"
+    _attr_icon = "mdi:history"
+
+    def __init__(self, manager) -> None:
+        self._manager = manager
+        self._attr_unique_id = f"{DOMAIN}_last_stop_summary"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, DOMAIN)},
+            name="Cross Battery Charge Guard",
+            manufacturer="GitHub",
+        )
+
+    @property
+    def native_value(self) -> str:
+        events = self._manager.stop_log()
+        latest = events[0] if events else None
+        if latest is None:
+            return "No stop events yet"
+        return f"{latest.timestamp} — {latest.battery} ({latest.status}): {latest.reason}"
+
+    def refresh(self) -> None:
+        self.async_write_ha_state()
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     manager = hass.data[DOMAIN]["manager"]
-    sensor = StopEventSensor(manager)
-    hass.data.setdefault(DOMAIN, {}).setdefault("stop_event_sensors", []).append(sensor)
-    async_add_entities([sensor])
+    stop_count_sensor = StopEventSensor(manager)
+    stop_summary_sensor = StopEventSummarySensor(manager)
+    hass.data.setdefault(DOMAIN, {}).setdefault("stop_event_sensors", []).extend(
+        [stop_count_sensor, stop_summary_sensor]
+    )
+    async_add_entities([stop_count_sensor, stop_summary_sensor])

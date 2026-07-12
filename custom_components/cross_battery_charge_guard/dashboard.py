@@ -100,8 +100,8 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         "title": "Last Stop Event",
                         "entities": [
                             {
-                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
-                                "name": "Stop Event Count",
+                                "entity": "sensor.cross_battery_charge_guard_last_stop",
+                                "name": "Last Stop",
                             }
                         ],
                     },
