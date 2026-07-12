@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import logging
 
+from .manager import BatteryManager
 from .dashboard import build_dashboard_config, dashboard_enabled, dashboard_title, dashboard_url_path
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass, entry) -> bool:
+    manager = BatteryManager(hass=hass)
+    hass.data.setdefault(DOMAIN, {})["manager"] = manager
     from homeassistant.components import frontend
     from homeassistant.components.lovelace import (
         CONF_ICON,
@@ -55,4 +59,5 @@ async def async_setup_entry(hass, entry) -> bool:
 
 
 async def async_unload_entry(hass, entry) -> bool:
+    hass.data.get(DOMAIN, {}).pop("manager", None)
     return True

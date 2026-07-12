@@ -93,7 +93,17 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                     },
                     {
                         "type": "markdown",
-                        "content": "## 📝 Stop Log\n- No stop events recorded yet\n- When a stop event is recorded, the latest entries will appear here\n- This keeps the dashboard aligned with the most recent control stop",
+                        "content": "## 📝 Stop Log\n- Recorder-backed stop history sensor\n- The latest stop event is stored as sensor history\n- Use this section to review when charging was stopped",
+                    },
+                    {
+                        "type": "entities",
+                        "title": "Last Stop Event",
+                        "entities": [
+                            {
+                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
+                                "name": "Stop Event Count",
+                            }
+                        ],
                     },
                     {
                         "type": "vertical-stack",
