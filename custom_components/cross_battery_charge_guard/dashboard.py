@@ -106,6 +106,18 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                         ],
                     },
                     {
+                        "type": "history-graph",
+                        "title": "📝 Stop History",
+                        "hours_to_show": 24,
+                        "refresh_interval": 60,
+                        "entities": [
+                            {
+                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
+                                "name": "Stop Event Count",
+                            }
+                        ],
+                    },
+                    {
                         "type": "vertical-stack",
                         "cards": [
                             {

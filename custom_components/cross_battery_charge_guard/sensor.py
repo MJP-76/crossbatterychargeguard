@@ -13,7 +13,7 @@ from .const import DOMAIN
 
 class StopEventSensor(SensorEntity):
     _attr_has_entity_name = True
-    _attr_name = "Stop Event Count"
+    _attr_name = "Cross Battery Charge Guard Stop Event Count"
     _attr_icon = "mdi:history"
 
     def __init__(self, manager) -> None:
