@@ -72,14 +72,6 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                                     },
                                     {
                                         "type": "markdown",
-                                        "content": "## 🧾 Last Stop Details\n- Sensor: `sensor.cross_battery_charge_guard_last_stop`\n- Count sensor: `sensor.cross_battery_charge_guard_stop_event_count`\n- Use the sensor attributes for timestamp, battery, reason, and status",
-                                    },
-                                    {
-                                        "type": "markdown",
-                                        "content": "## 🛡️ Rules in Place\n- Cross-charge detection\n- SOC divergence detection\n- Thermal protection",
-                                    },
-                                    {
-                                        "type": "markdown",
                                         "content": "## ⚙️ Current Control\n- Battery A: aligned\n- Battery B: aligned\n- Control goal: keep batteries aligned",
                                     },
                                     {
