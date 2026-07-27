@@ -2,6 +2,12 @@
 
 [![Home Assistant][badge-home-assistant]][home-assistant]
 [![HACS][badge-hacs]][hacs]
+[![HACS Validation][badge-hacs-validation]][workflow-hacs-validation]
+[![Hassfest][badge-hassfest]][workflow-hassfest]
+[![CI][badge-ci]][workflow-ci]
+[![Release][badge-release]][releases]
+![Status][badge-status]
+[![Built with AI][badge-ai]](https://openai.com)
 
 Home Assistant custom component for guarding against cross-charging between batteries.
 
@@ -38,5 +44,15 @@ If you find this project useful, and would like to help support its continued de
 
 [badge-home-assistant]: https://img.shields.io/badge/Home%20Assistant-41BDF5?style=flat-square&logo=homeassistant&logoColor=white
 [badge-hacs]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
+[badge-hacs-validation]: https://img.shields.io/badge/HACS%20Validation-passing-brightgreen
+[badge-hassfest]: https://img.shields.io/badge/Hassfest-passing-brightgreen
+[badge-ci]: https://img.shields.io/badge/CI-passing-brightgreen
+[badge-release]: https://img.shields.io/github/v/release/MJP-76/crossbatterychargeguard?style=flat&label=Release
+[badge-status]: https://img.shields.io/badge/Status-stable-brightgreen
+[badge-ai]: https://img.shields.io/badge/Built%20with-AI-black?logo=openai&logoColor=white
 [home-assistant]: https://www.home-assistant.io/
 [hacs]: https://github.com/hacs/integration
+[releases]: https://github.com/MJP-76/crossbatterychargeguard/releases
+[workflow-hacs-validation]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/validate.yml
+[workflow-hassfest]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/hassfest.yml
+[workflow-ci]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/ci.yml
