@@ -6,7 +6,6 @@
 [![Hassfest][badge-hassfest]][workflow-hassfest]
 [![CI][badge-ci]][workflow-ci]
 [![Release][badge-release]][releases]
-![Status][badge-status]
 [![Built with AI][badge-built-with-ai]][built-with-ai]
 
 Home Assistant custom component for guarding against cross-charging between batteries.
