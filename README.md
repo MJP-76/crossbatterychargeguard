@@ -48,7 +48,7 @@ If you find this project useful, and would like to help support its continued de
 [badge-hassfest]: https://img.shields.io/badge/Hassfest-passing-brightgreen
 [badge-ci]: https://img.shields.io/badge/CI-passing-brightgreen
 [badge-release]: https://img.shields.io/github/v/release/MJP-76/crossbatterychargeguard?style=flat&label=Release
-[badge-status]: https://img.shields.io/badge/Status-stable-brightgreen
+[badge-status]: https://img.shields.io/badge/Status-experimental-yellow
 [badge-ai]: https://img.shields.io/badge/Built%20with-AI-black?logo=openai&logoColor=white
 [home-assistant]: https://www.home-assistant.io/
 [hacs]: https://github.com/hacs/integration
