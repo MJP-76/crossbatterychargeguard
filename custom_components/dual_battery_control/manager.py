@@ -1,4 +1,4 @@
-"""Battery discovery and detection manager."""
+"""Battery discovery, detection, and correction manager."""
 
 from __future__ import annotations
 
@@ -9,22 +9,25 @@ from typing import TYPE_CHECKING
 
 from .diagnostics import DiagnosticsSnapshot, build_diagnostics
 from .detector import CrossChargeDetector
-from .models import AnalysisReport, BatteryState, DetectorResult, StopEvent
+from .models import AnalysisReport, BatteryState, CorrectionResult, DetectorResult, StopEvent
 from .repair import build_repair_issue, repair_issue_payload
 from .registry import BatteryRegistry
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
+    from .corrector import CorrectionEngine
 
 
 @dataclass(slots=True)
 class BatteryManager:
-    """Keep the registry and detector in sync."""
+    """Keep the registry, detector, and correction engine in sync."""
 
     registry: BatteryRegistry = field(default_factory=BatteryRegistry)
     detector: CrossChargeDetector = field(default_factory=CrossChargeDetector)
     stop_events: deque[StopEvent] = field(default_factory=lambda: deque(maxlen=10))
     hass: HomeAssistant | None = None
+    corrector: CorrectionEngine | None = None
+    entry_data: dict | None = None
 
     def update_battery(self, battery: BatteryState) -> None:
         self.registry.upsert(battery)
@@ -33,6 +36,13 @@ class BatteryManager:
     def detect(self) -> DetectorResult:
         self.detector.registry = self.registry
         return self.detector.detect()
+
+    async def async_correct(self, result: DetectorResult | None = None) -> CorrectionResult:
+        if self.corrector is None:
+            return CorrectionResult(actions=[], applied=False)
+        if result is None:
+            result = self.detect()
+        return await self.corrector.evaluate_and_apply(result)
 
     def analyze(self) -> AnalysisReport:
         result = self.detect()
@@ -63,7 +73,7 @@ class BatteryManager:
             )
         )
         if self.hass is not None:
-            for sensor in self.hass.data.get("cross_battery_charge_guard", {}).get("stop_event_sensors", []):
+            for sensor in self.hass.data.get("dual_battery_control", {}).get("stop_event_sensors", []):
                 sensor.refresh()
 
     def stop_log(self) -> list[StopEvent]:

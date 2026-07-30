@@ -13,7 +13,7 @@ from .const import DOMAIN
 
 class StopEventSensor(SensorEntity):
     _attr_has_entity_name = True
-    _attr_name = "Cross Battery Charge Guard Stop Event Count"
+    _attr_name = "Dual Battery Control Stop Event Count"
     _attr_icon = "mdi:history"
 
     def __init__(self, manager) -> None:
@@ -21,7 +21,7 @@ class StopEventSensor(SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_stop_event_count"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, DOMAIN)},
-            name="Cross Battery Charge Guard",
+            name="Dual Battery Control",
             manufacturer="GitHub",
         )
 
@@ -56,7 +56,7 @@ class StopEventSensor(SensorEntity):
 
 class StopEventSummarySensor(SensorEntity):
     _attr_has_entity_name = True
-    _attr_name = "Cross Battery Charge Guard Last Stop"
+    _attr_name = "Dual Battery Control Last Stop"
     _attr_icon = "mdi:history"
 
     def __init__(self, manager) -> None:
@@ -64,7 +64,7 @@ class StopEventSummarySensor(SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_last_stop_summary"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, DOMAIN)},
-            name="Cross Battery Charge Guard",
+            name="Dual Battery Control",
             manufacturer="GitHub",
         )
 

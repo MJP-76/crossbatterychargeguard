@@ -65,7 +65,7 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                                         "refresh_interval": 60,
                                         "entities": [
                                             {
-                                                "entity": "sensor.cross_battery_charge_guard_stop_event_count",
+                                                "entity": "sensor.dual_battery_control_stop_event_count",
                                                 "name": "Stop Event Count",
                                             }
                                         ],

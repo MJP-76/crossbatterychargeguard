@@ -1,4 +1,4 @@
-"""Internal models for cross-charge detection."""
+"""Internal models for cross-charge detection and correction."""
 
 from __future__ import annotations
 
@@ -11,6 +11,12 @@ class Severity(StrEnum):
     info = "info"
     warning = "warning"
     critical = "critical"
+
+
+class CorrectionMode(StrEnum):
+    off = "off"
+    stop = "stop"
+    reduce = "reduce"
 
 
 @dataclass(slots=True, frozen=True)
@@ -57,3 +63,17 @@ class AnalysisReport:
     result: DetectorResult
     diagnostics: dict[str, object]
     repair_issue: dict[str, object] | None
+
+
+@dataclass(slots=True, frozen=True)
+class CorrectionAction:
+    entity_id: str
+    service: str
+    service_data: dict[str, Any]
+    reason: str
+
+
+@dataclass(slots=True, frozen=True)
+class CorrectionResult:
+    actions: list[CorrectionAction]
+    applied: bool

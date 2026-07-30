@@ -1,0 +1,25 @@
+prevent_cross_charge:
+  name: Prevent cross-charge
+  description: >
+    Immediately run detection and apply corrections to stop
+    cross-charging between batteries.
+  fields:
+    dry_run:
+      name: Dry run
+      description: >
+        If true, log what would be done but do not apply any changes.
+      required: false
+      default: false
+      selector:
+        boolean:
+
+set_auto_correction:
+  name: Set auto-correction
+  description: Enable or disable the automatic correction loop.
+  fields:
+    enabled:
+      name: Enabled
+      description: Whether auto-correction should run.
+      required: true
+      selector:
+        boolean:

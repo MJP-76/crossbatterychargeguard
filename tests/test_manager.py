@@ -1,7 +1,7 @@
 import unittest
 
-from custom_components.cross_battery_charge_guard.manager import BatteryManager
-from custom_components.cross_battery_charge_guard.models import BatteryState
+from custom_components.dual_battery_control.manager import BatteryManager
+from custom_components.dual_battery_control.models import BatteryState
 
 
 class ManagerTests(unittest.TestCase):

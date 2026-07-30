@@ -1,6 +1,6 @@
-"""Constants for Cross Battery Charge Guard."""
+"""Constants for Dual Battery Control."""
 
-DOMAIN = "cross_battery_charge_guard"
+DOMAIN = "dual_battery_control"
 PLATFORMS: list[str] = ["sensor"]
 CONF_CREATE_DASHBOARD = "create_dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"
@@ -22,5 +22,14 @@ DEFAULT_MAX_SOC_DIFFERENCE = 30.0
 DEFAULT_LOOP_DURATION = 300
 DEFAULT_MAX_BATTERY_TEMP = 50.0
 DEFAULT_CREATE_DASHBOARD = True
-DEFAULT_DASHBOARD_TITLE = "Cross Battery Charge Guard"
-DEFAULT_DASHBOARD_URL_PATH = "crossbatterychargeguard"
+DEFAULT_DASHBOARD_TITLE = "Dual Battery Control"
+DEFAULT_DASHBOARD_URL_PATH = "dualbatterycontrol"
+
+CONF_CORRECTION_ENABLED = "correction_enabled"
+CONF_CORRECTION_MODE = "correction_mode"
+CONF_CORRECTION_AGGRESSIVENESS = "correction_aggressiveness"
+DEFAULT_CORRECTION_ENABLED = False
+DEFAULT_CORRECTION_MODE = "stop"
+DEFAULT_CORRECTION_AGGRESSIVENESS = 0.5
+SERVICE_PREVENT_CROSS_CHARGE = "prevent_cross_charge"
+SERVICE_SET_AUTO_CORRECTION = "set_auto_correction"

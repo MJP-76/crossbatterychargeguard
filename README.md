@@ -1,4 +1,4 @@
-# Cross Battery Charge Guard
+# Dual Battery Control
 
 [![Home Assistant][badge-home-assistant]][home-assistant]
 [![HACS][badge-hacs]][hacs]
@@ -8,30 +8,32 @@
 [![Release][badge-release]][releases]
 ![Status][badge-status]
 
-Home Assistant custom component for guarding against cross-charging between batteries.
+Home Assistant custom component for monitoring and preventing cross-charging between batteries in dual-inverter setups.
 
 Repository: `MJP-76/crossbatterychargeguard`
 
 HACS-compatible metadata is included at the repository root in `hacs.json`.
 The integration can create a Lovelace dashboard automatically from the entities you choose during setup, with separate battery blocks and live SOC/power trend cards.
 It is configured through Home Assistant's UI config flow, not `configuration.yaml`.
-Current release: `0.1.29`.
-Default dashboard URL path: `crossbatterychargeguard`.
+Current release: `0.2.0`.
+Default dashboard URL path: `dualbatterycontrol`.
+
+## Background
+
+This component was created to solve cross-charging between two batteries connected to a pair of **SolaX SKU-5000E inverters** that do not support Master/Slave co-ordination. In such setups each inverter independently decides when to charge or discharge its battery, which can lead to one battery discharging into the other — wasting energy and reducing efficiency. Dual Battery Control detects this condition and can automatically adjust charge current limits to break the loop.
 
 ## Included
 
-- `custom_components/cross_battery_charge_guard/`
+- `custom_components/dual_battery_control/`
 - battery registry
-- rule engine
+- rule engine (cross-charge, SOC divergence, thermal)
+- correction engine — automatic prevention of cross-charging
 - diagnostics
 - repairs helper
 - manifest and packaging metadata
 - tests
-- config flow and options flow for selecting battery entities and dashboard settings
-
-## Deferred
-
-- Battery load balancing has been moved to a later todo and is not included in this version.
+- config flow and options flow for selecting battery entities, dashboard, and correction settings
+- two services: `prevent_cross_charge` (manual trigger with dry-run mode) and `set_auto_correction` (toggle)
 
 ## Support me
 

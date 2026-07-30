@@ -1,5 +1,5 @@
 {
-  "name": "Cross Battery Charge Guard",
+  "name": "Dual Battery Control",
   "content_in_root": false,
   "domains": ["sensor", "binary_sensor"]
 }
