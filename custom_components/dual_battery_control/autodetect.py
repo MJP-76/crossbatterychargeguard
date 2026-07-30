@@ -1,4 +1,9 @@
-"""Auto-detect entities for dual battery setup."""
+"""Auto-detect battery/inverter entities for dual battery setup.
+
+Supports any inverter brand (SolaX, Growatt, Sungrow, Goodwe, etc.)
+by grouping entities through the device registry and matching generic
+battery-related keywords.
+"""
 
 from __future__ import annotations
 
@@ -7,89 +12,171 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
+# Keywords used to identify battery-related entities
+_SOC_KEYWORDS = ["battery_capacity", "battery_soc", "soc", "state_of_charge", "state of charge", "battery_level"]
+_POWER_KEYWORDS = ["battery_power", "battery_power_charge"]
+_CURRENT_LIMIT_KEYWORDS = ["battery_charge_max_current", "charge_max_current", "current_limit", "charge_current_limit", "max_charge_current"]
+_HOUSE_LOAD_KEYWORDS = ["house_load", "home_consumption", "house_power", "consumption", "home_load", "grid_consumption"]
 
-def _score(priority: int, *conditions: bool) -> int:
-    return priority * 10 + sum(1 for c in conditions if c)
+
+def _keyword_match(name: str, keywords: list[str]) -> bool:
+    name = name.lower().replace("_", " ").replace("-", " ")
+    return any(kw.replace("_", " ") in name for kw in keywords)
 
 
-def _pick_best(entities: list[dict], *, domain: str | None = None, name_like: str | None = None, device_class: str | None = None) -> str | None:
+def _score_device(entities: list[dict]) -> int:
+    """Score a device group for battery/inverter relevance (higher = better)."""
+    score = 0
+    has_soc = has_power = has_current = False
+    for e in entities:
+        name = e.get("name", "")
+        dc = e.get("device_class", "")
+        if _keyword_match(name, _SOC_KEYWORDS) or dc == "battery":
+            has_soc = True
+            score += 20
+        if _keyword_match(name, _POWER_KEYWORDS) or dc == "power":
+            has_power = True
+            score += 10
+        if _keyword_match(name, _CURRENT_LIMIT_KEYWORDS) or dc == "current":
+            has_current = True
+            score += 10
+        if _keyword_match(name, _HOUSE_LOAD_KEYWORDS):
+            score += 10
+        if "battery" in name.split():
+            score += 5
+        if "inverter" in name.split():
+            score += 3
+    if has_soc and has_power:
+        score += 15
+    if has_soc and has_current:
+        score += 10
+    return score
+
+
+def _pick(entities: list[dict], keywords: list[str], preferred_domain: str | None = None, device_class: str | None = None) -> str | None:
+    """Pick the best matching entity for a role from a device group."""
     scored: list[tuple[int, str]] = []
     for e in entities:
         ent = e["entity_id"]
+        name = e.get("name", "")
+        dc = e.get("device_class", "")
         score = 0
-        if ent.startswith("number.") if domain == "number" else (ent.startswith("sensor.") if domain in (None, "sensor") else False):
-            score += 10
-        if domain and ent.startswith(f"{domain}."):
-            score += 20
-        if name_like and name_like in e.get("name", "").lower():
+        if _keyword_match(name, keywords):
             score += 30
-        if name_like and name_like in ent.lower():
+        if preferred_domain and ent.startswith(f"{preferred_domain}."):
+            score += 20
+        if device_class and dc == device_class:
             score += 15
-        if device_class and e.get("device_class") == device_class:
-            score += 25
         if score > 0:
             scored.append((score, ent))
     scored.sort(reverse=True)
     return scored[0][1] if scored else None
 
 
-def _build_mapping(groups: dict[str, list[dict]]) -> dict:
-    """Build entity mapping from entity groups keyed by inverter prefix."""
-    mapping = {"a": {}, "b": {}}
-    sorted_prefixes = sorted(groups.keys())
-    if not sorted_prefixes:
-        return mapping
-    label_map = {"a": sorted_prefixes[0], "b": sorted_prefixes[1]} if len(sorted_prefixes) >= 2 else {"a": sorted_prefixes[0]}
-    for key, prefix in label_map.items():
-        ents = groups[prefix]
-        mapping[key]["soc"] = _pick_best(ents, name_like="battery_capacity") or _pick_best(ents, name_like="soc")
-        mapping[key]["power"] = _pick_best(ents, name_like="battery_power")
-        mapping[key]["current_limit"] = _pick_best(ents, domain="number", name_like="battery_charge_max_current") or _pick_best(ents, domain="number", name_like="charge_max_current") or _pick_best(ents, domain="number", name_like="current_limit")
-        mapping[key]["house_load"] = _pick_best(ents, name_like="house_load")
-    return mapping
-
-
-def _prefix_for(eid: str) -> str | None:
-    """Extract inverter prefix like 'tock_solax1' from entity id."""
-    eid = eid.split(".")[-1]
-    import re
-    for m in re.finditer(r"(tock_solax[12]|solax[12]|inverter[12])", eid):
-        return m.group(0)
-    return None
-
-
 async def async_detect_entities(hass: HomeAssistant) -> dict:
-    """Scan Home Assistant and return detected entity map for Battery A and B.
+    """Scan entities and return detected Battery A and B mapping.
 
-    Returns a dict like:
-      { "a": { "soc": "...", "power": "...", "current_limit": "...", "house_load": "..." },
-        "b": { ... } }
+    Returns: {"a": {"soc": eid, "power": eid, "current_limit": eid, "house_load": eid},
+               "b": {...}}
     """
     states = hass.states.async_all()
-    solax_entities = []
+
+    # Build device → entities mapping from entity registry
+    try:
+        from homeassistant.helpers.entity_registry import async_get as get_er
+        er = get_er(hass)
+    except Exception:
+        er = None
+
+    by_device: dict[str | None, list[dict]] = {}
+    by_prefix: dict[str, list[dict]] = {}
+
     for state in states:
-        eid = state.entity_id
-        if "solax" in eid.lower() or "inverter" in eid.lower():
-            solax_entities.append({
-                "entity_id": eid,
-                "name": (state.attributes.get("friendly_name") or eid).lower(),
-                "device_class": state.attributes.get("device_class"),
-            })
+        info = {
+            "entity_id": state.entity_id,
+            "name": (state.attributes.get("friendly_name") or state.entity_id.split(".")[-1]).lower().replace("_", " "),
+            "device_class": state.attributes.get("device_class"),
+        }
+        device_id = None
+        if er:
+            entry = er.async_get(state.entity_id)
+            if entry:
+                device_id = entry.device_id
+        by_device.setdefault(device_id, []).append(info)
 
-    groups: dict[str, list[dict]] = {}
-    for e in solax_entities:
-        prefix = _prefix_for(e["entity_id"])
-        if prefix:
-            groups.setdefault(prefix, []).append(e)
+        # Also group by prefix for strategy 2
+        _group_by_prefix(info, by_prefix)
 
-    mapping = _build_mapping(groups)
+    # Strategy 1: Score device groups, pick top 2
+    device_scores: list[tuple[int, str | None]] = []
+    for dev_id, ents in by_device.items():
+        score = _score_device(ents)
+        if score > 0:
+            device_scores.append((score, dev_id))
+    device_scores.sort(reverse=True)
 
+    if len(device_scores) >= 2:
+        top_devices = [device_scores[0][1], device_scores[1][1]]
+        mapping = {}
+        for key, dev_id in zip(("a", "b"), top_devices):
+            ents = by_device[dev_id]
+            mapping[key] = _map_device_entities(ents)
+        if mapping.get("a", {}).get("soc"):
+            return mapping
+
+    # Strategy 2: Prefix-based grouping (SolaX, or numeric suffixes)
+    if by_prefix:
+        sorted_prefixes = sorted(by_prefix.keys())
+        if len(sorted_prefixes) >= 2:
+            mapping = {}
+            for key, prefix in zip(("a", "b"), sorted_prefixes[:2]):
+                ents = by_prefix[prefix]
+                mapping[key] = _map_device_entities(ents)
+            if mapping.get("a", {}).get("soc"):
+                return mapping
+
+    # Strategy 3: Fallback — scan all entities without device grouping
+    all_ents = []
+    for state in states:
+        all_ents.append({
+            "entity_id": state.entity_id,
+            "name": (state.attributes.get("friendly_name") or state.entity_id.split(".")[-1]).lower().replace("_", " "),
+            "device_class": state.attributes.get("device_class"),
+        })
+    soc = _pick(all_ents, _SOC_KEYWORDS, device_class="battery")
+    power = _pick(all_ents, _POWER_KEYWORDS, device_class="power")
+    current = _pick(all_ents, _CURRENT_LIMIT_KEYWORDS, preferred_domain="number")
+    house = _pick(all_ents, _HOUSE_LOAD_KEYWORDS, device_class="power")
     result = {}
-    label_map = {"a": "A", "b": "B"}
-    for key in mapping:
-        if any(mapping[key].values()):
-            result[key] = mapping[key]
+    if soc or power or current or house:
+        result["a"] = {"soc": soc, "power": power, "current_limit": current, "house_load": house}
     return result
+
+
+def _group_by_prefix(info: dict, groups: dict[str, list[dict]]) -> None:
+    """Try to group entity by an inverter/battery prefix in its ID."""
+    eid = info["entity_id"].split(".")[-1]
+    import re
+    for match in re.finditer(r"(tock_solax[12]|solax[12]|inverter[12]|battery[12]|pvo[12]|bat[ab12])", eid):
+        groups.setdefault(match.group(0), []).append(info)
+        return
+    for match in re.finditer(r"^(\w+?)[_\.]?(?:battery|inverter|soc|power)", eid, re.IGNORECASE):
+        groups.setdefault(match.group(1), []).append(info)
+        return
+
+
+def _map_device_entities(entities: list[dict]) -> dict:
+    """Map entities from a device group to SOC/Power/CurrentLimit/HouseLoad."""
+    soc = _pick(entities, _SOC_KEYWORDS, device_class="battery")
+    power = _pick(entities, _POWER_KEYWORDS, device_class="power")
+    current_limit = _pick(entities, _CURRENT_LIMIT_KEYWORDS, preferred_domain="number")
+    house_load = _pick(entities, _HOUSE_LOAD_KEYWORDS, device_class="power")
+    return {
+        "soc": soc,
+        "power": power,
+        "current_limit": current_limit,
+        "house_load": house_load,
+    }
 
 
 async def async_build_defaults(hass: HomeAssistant) -> dict:
