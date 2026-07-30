@@ -84,18 +84,58 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         defaults = dict(await async_build_defaults(self.hass))
-        if defaults.get(CONF_BATTERY_A_SOC):
+
+        battery_a_complete = all([
+            defaults.get(CONF_BATTERY_A_SOC),
+            defaults.get(CONF_BATTERY_A_POWER),
+            defaults.get(CONF_BATTERY_A_CURRENT_LIMIT),
+            defaults.get(CONF_BATTERY_A_HOUSE_LOAD),
+        ])
+        battery_b_complete = all([
+            defaults.get(CONF_BATTERY_B_SOC),
+            defaults.get(CONF_BATTERY_B_POWER),
+            defaults.get(CONF_BATTERY_B_CURRENT_LIMIT),
+            defaults.get(CONF_BATTERY_B_HOUSE_LOAD),
+        ])
+
+        if battery_a_complete and battery_b_complete:
+            data = {
+                CONF_CREATE_DASHBOARD: defaults.get(CONF_CREATE_DASHBOARD, DEFAULT_CREATE_DASHBOARD),
+                CONF_DASHBOARD_TITLE: defaults.get(CONF_DASHBOARD_TITLE, DEFAULT_DASHBOARD_TITLE),
+                CONF_DASHBOARD_URL_PATH: defaults.get(CONF_DASHBOARD_URL_PATH, DEFAULT_DASHBOARD_URL_PATH),
+                CONF_BATTERY_A_NAME: defaults.get(CONF_BATTERY_A_NAME, "Battery A"),
+                CONF_BATTERY_A_SOC: defaults[CONF_BATTERY_A_SOC],
+                CONF_BATTERY_A_POWER: defaults[CONF_BATTERY_A_POWER],
+                CONF_BATTERY_A_CURRENT_LIMIT: defaults[CONF_BATTERY_A_CURRENT_LIMIT],
+                CONF_BATTERY_A_HOUSE_LOAD: defaults[CONF_BATTERY_A_HOUSE_LOAD],
+                CONF_BATTERY_B_NAME: defaults.get(CONF_BATTERY_B_NAME, "Battery B"),
+                CONF_BATTERY_B_SOC: defaults[CONF_BATTERY_B_SOC],
+                CONF_BATTERY_B_POWER: defaults[CONF_BATTERY_B_POWER],
+                CONF_BATTERY_B_CURRENT_LIMIT: defaults[CONF_BATTERY_B_CURRENT_LIMIT],
+                CONF_BATTERY_B_HOUSE_LOAD: defaults[CONF_BATTERY_B_HOUSE_LOAD],
+                CONF_CORRECTION_ENABLED: defaults.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED),
+                CONF_CORRECTION_MODE: defaults.get(CONF_CORRECTION_MODE, DEFAULT_CORRECTION_MODE),
+                CONF_CORRECTION_AGGRESSIVENESS: defaults.get(CONF_CORRECTION_AGGRESSIVENESS, DEFAULT_CORRECTION_AGGRESSIVENESS),
+            }
             _LOGGER.info(
-                "Auto-detected entities: Battery A SOC=%s, Power=%s, Current Limit=%s, House Load=%s | Battery B SOC=%s, Power=%s, Current Limit=%s, House Load=%s",
-                defaults.get(CONF_BATTERY_A_SOC),
-                defaults.get(CONF_BATTERY_A_POWER),
-                defaults.get(CONF_BATTERY_A_CURRENT_LIMIT),
-                defaults.get(CONF_BATTERY_A_HOUSE_LOAD),
-                defaults.get(CONF_BATTERY_B_SOC),
-                defaults.get(CONF_BATTERY_B_POWER),
-                defaults.get(CONF_BATTERY_B_CURRENT_LIMIT),
-                defaults.get(CONF_BATTERY_B_HOUSE_LOAD),
+                "Auto-detected both batteries. Creating entry with: A SOC=%s, Power=%s, Current=%s, Load=%s | B SOC=%s, Power=%s, Current=%s, Load=%s",
+                data[CONF_BATTERY_A_SOC], data[CONF_BATTERY_A_POWER],
+                data[CONF_BATTERY_A_CURRENT_LIMIT], data[CONF_BATTERY_A_HOUSE_LOAD],
+                data[CONF_BATTERY_B_SOC], data[CONF_BATTERY_B_POWER],
+                data[CONF_BATTERY_B_CURRENT_LIMIT], data[CONF_BATTERY_B_HOUSE_LOAD],
             )
+            return self.async_create_entry(
+                title=DEFAULT_DASHBOARD_TITLE,
+                data=data,
+            )
+
+        _LOGGER.info(
+            "Partial auto-detect. Showing form. Battery A SOC=%s, Power=%s, Current=%s, Load=%s | B SOC=%s, Power=%s, Current=%s, Load=%s",
+            defaults.get(CONF_BATTERY_A_SOC), defaults.get(CONF_BATTERY_A_POWER),
+            defaults.get(CONF_BATTERY_A_CURRENT_LIMIT), defaults.get(CONF_BATTERY_A_HOUSE_LOAD),
+            defaults.get(CONF_BATTERY_B_SOC), defaults.get(CONF_BATTERY_B_POWER),
+            defaults.get(CONF_BATTERY_B_CURRENT_LIMIT), defaults.get(CONF_BATTERY_B_HOUSE_LOAD),
+        )
         return self.async_show_form(step_id="user", data_schema=_step_schema(defaults))
 
 
