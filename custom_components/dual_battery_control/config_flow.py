@@ -1,4 +1,4 @@
-"""Config flow for Cross Battery Charge Guard."""
+"""Config flow for Dual Battery Control."""
 
 from __future__ import annotations
 
