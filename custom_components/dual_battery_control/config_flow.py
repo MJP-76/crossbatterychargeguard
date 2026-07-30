@@ -20,13 +20,9 @@ from .const import (
     CONF_BATTERY_B_NAME,
     CONF_BATTERY_B_POWER,
     CONF_BATTERY_B_SOC,
-    CONF_CORRECTION_ENABLED,
-    CONF_CORRECTION_MODE,
     CONF_CREATE_DASHBOARD,
     CONF_DASHBOARD_TITLE,
     CONF_DASHBOARD_URL_PATH,
-    DEFAULT_CORRECTION_ENABLED,
-    DEFAULT_CORRECTION_MODE,
     DEFAULT_CREATE_DASHBOARD,
     DEFAULT_DASHBOARD_TITLE,
     DEFAULT_DASHBOARD_URL_PATH,
@@ -36,12 +32,6 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 ENTITY_SELECTOR = selector.EntitySelector(selector.EntitySelectorConfig())
-MODE_SELECTOR = selector.SelectSelector(
-    selector.SelectSelectorConfig(
-        options=["off", "stop", "reduce"],
-        mode=selector.SelectSelectorMode.DROPDOWN,
-    )
-)
 
 
 def _step_schema(defaults: dict[str, str | bool]) -> vol.Schema:
@@ -60,8 +50,6 @@ def _step_schema(defaults: dict[str, str | bool]) -> vol.Schema:
             vol.Required(CONF_BATTERY_B_POWER, default=defaults.get(CONF_BATTERY_B_POWER, "")): ENTITY_SELECTOR,
             vol.Required(CONF_BATTERY_B_CURRENT_LIMIT, default=defaults.get(CONF_BATTERY_B_CURRENT_LIMIT, "")): ENTITY_SELECTOR,
             vol.Required(CONF_BATTERY_B_HOUSE_LOAD, default=defaults.get(CONF_BATTERY_B_HOUSE_LOAD, "")): ENTITY_SELECTOR,
-            vol.Optional(CONF_CORRECTION_ENABLED, default=defaults.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED)): bool,
-            vol.Optional(CONF_CORRECTION_MODE, default=defaults.get(CONF_CORRECTION_MODE, DEFAULT_CORRECTION_MODE)): MODE_SELECTOR,
         }
     )
 
