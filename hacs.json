@@ -1,5 +1,4 @@
 {
   "name": "Dual Battery Control",
-  "content_in_root": false,
-  "domains": ["sensor", "binary_sensor"]
+  "content_in_root": false
 }
