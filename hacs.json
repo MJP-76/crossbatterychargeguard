@@ -1,4 +1,5 @@
 {
   "name": "Dual Battery Control",
-  "content_in_root": false
+  "content_in_root": false,
+  "domains": ["dual_battery_control"]
 }
