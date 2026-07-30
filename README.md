@@ -10,7 +10,7 @@
 
 Home Assistant custom component for monitoring and preventing cross-charging between batteries in dual-inverter setups.
 
-Repository: `MJP-76/crossbatterychargeguard`
+Repository: `MJP-76/ha-dual-battery-control`
 
 HACS-compatible metadata is included at the repository root in `hacs.json`.
 The integration can create a Lovelace dashboard automatically from the entities you choose during setup, with separate battery blocks and live SOC/power trend cards.
@@ -48,11 +48,11 @@ If you find this project useful, and would like to help support its continued de
 [badge-hacs]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
 [hacs]: https://github.com/hacs/integration
 [badge-hacs-validation]: https://img.shields.io/badge/HACS%20Validation-passing-brightgreen
-[workflow-hacs-validation]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/validate.yml
-[badge-hassfest]: https://img.shields.io/github/actions/workflow/status/MJP-76/crossbatterychargeguard/hassfest.yml?branch=main&label=Hassfest
-[workflow-hassfest]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/hassfest.yml
-[badge-ci]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/ci.yml/badge.svg
-[workflow-ci]: https://github.com/MJP-76/crossbatterychargeguard/actions/workflows/ci.yml
-[badge-release]: https://img.shields.io/github/v/release/MJP-76/crossbatterychargeguard?style=flat&label=Release
-[releases]: https://github.com/MJP-76/crossbatterychargeguard/releases
+[workflow-hacs-validation]: https://github.com/MJP-76/ha-dual-battery-control/actions/workflows/validate.yml
+[badge-hassfest]: https://img.shields.io/github/actions/workflow/status/MJP-76/ha-dual-battery-control/hassfest.yml?branch=main&label=Hassfest
+[workflow-hassfest]: https://github.com/MJP-76/ha-dual-battery-control/actions/workflows/hassfest.yml
+[badge-ci]: https://github.com/MJP-76/ha-dual-battery-control/actions/workflows/ci.yml/badge.svg
+[workflow-ci]: https://github.com/MJP-76/ha-dual-battery-control/actions/workflows/ci.yml
+[badge-release]: https://img.shields.io/github/v/release/MJP-76/ha-dual-battery-control?style=flat&label=Release
+[releases]: https://github.com/MJP-76/ha-dual-battery-control/releases
 [badge-status]: https://img.shields.io/badge/Status-experimental-yellow
