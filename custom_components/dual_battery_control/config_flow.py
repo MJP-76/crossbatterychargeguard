@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import logging
+
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import selector
 
+from .autodetect import async_build_defaults
 from .const import (
     CONF_BATTERY_A_CURRENT_LIMIT,
     CONF_BATTERY_A_HOUSE_LOAD,
@@ -31,6 +34,8 @@ from .const import (
     DEFAULT_DASHBOARD_URL_PATH,
     DOMAIN,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 ENTITY_SELECTOR = selector.EntitySelector(selector.EntitySelectorConfig())
 MODE_SELECTOR = selector.SelectSelector(
@@ -78,7 +83,20 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 data=user_input,
             )
 
-        return self.async_show_form(step_id="user", data_schema=_step_schema({}))
+        defaults = dict(await async_build_defaults(self.hass))
+        if defaults.get(CONF_BATTERY_A_SOC):
+            _LOGGER.info(
+                "Auto-detected entities: Battery A SOC=%s, Power=%s, Current Limit=%s, House Load=%s | Battery B SOC=%s, Power=%s, Current Limit=%s, House Load=%s",
+                defaults.get(CONF_BATTERY_A_SOC),
+                defaults.get(CONF_BATTERY_A_POWER),
+                defaults.get(CONF_BATTERY_A_CURRENT_LIMIT),
+                defaults.get(CONF_BATTERY_A_HOUSE_LOAD),
+                defaults.get(CONF_BATTERY_B_SOC),
+                defaults.get(CONF_BATTERY_B_POWER),
+                defaults.get(CONF_BATTERY_B_CURRENT_LIMIT),
+                defaults.get(CONF_BATTERY_B_HOUSE_LOAD),
+            )
+        return self.async_show_form(step_id="user", data_schema=_step_schema(defaults))
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
