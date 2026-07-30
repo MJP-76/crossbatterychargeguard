@@ -5,13 +5,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from .const import (
-    CONF_CORRECTION_AGGRESSIVENESS,
-    CONF_CORRECTION_MODE,
-    DEFAULT_CORRECTION_AGGRESSIVENESS,
-    DEFAULT_CORRECTION_MODE,
-)
-from .models import CorrectionAction, CorrectionMode, CorrectionResult, DetectorResult
+from .const import CONF_CORRECTION_MODE, DEFAULT_CORRECTION_MODE
+from .models import CorrectionAction, CorrectionMode, CorrectionResult, CrossChargeEvent, DetectorResult, Severity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -56,11 +51,14 @@ class CorrectionEngine:
         except ValueError:
             return CorrectionMode(DEFAULT_CORRECTION_MODE)
 
-    @property
-    def _aggressiveness(self) -> float:
-        return float(
-            self._entry_data.get(CONF_CORRECTION_AGGRESSIVENESS, DEFAULT_CORRECTION_AGGRESSIVENESS)
-        )
+    def _reduction_factor(self, event: CrossChargeEvent) -> float:
+        power = abs(event.watts)
+        power_factor = min(1.0, power / 500)
+        if event.severity == Severity.critical:
+            return 1.0
+        if event.severity == Severity.warning:
+            return max(0.5, power_factor)
+        return power_factor * 0.5
 
     async def evaluate_and_apply(self, result: DetectorResult) -> CorrectionResult:
         actions: list[CorrectionAction] = []
@@ -83,7 +81,7 @@ class CorrectionEngine:
                     if self._mode == CorrectionMode.stop:
                         new_value = 0
                     else:
-                        reduction = original * self._aggressiveness
+                        reduction = original * self._reduction_factor(event)
                         new_value = max(0, original - reduction)
 
                     actions.append(

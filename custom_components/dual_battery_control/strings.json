@@ -1,6 +1,30 @@
 {
   "title": "Dual Battery Control",
   "entity": {
+    "switch": {
+      "auto_correction": {
+        "name": "Auto Correction",
+        "state": {
+          "on": "On",
+          "off": "Off"
+        }
+      }
+    },
+    "number": {
+      "check_interval": {
+        "name": "Check Interval"
+      }
+    },
+    "select": {
+      "correction_mode": {
+        "name": "Correction Mode",
+        "state": {
+          "off": "Off",
+          "stop": "Stop",
+          "reduce": "Reduce"
+        }
+      }
+    },
     "sensor": {
       "stop_event_count": {
         "name": "Stop Event Count",
@@ -38,8 +62,7 @@
           "battery_b_current_limit": "Battery B current limit entity",
           "battery_b_house_load": "Battery B house load entity",
           "correction_enabled": "Auto-correction enabled",
-          "correction_mode": "Correction mode",
-          "correction_aggressiveness": "Correction aggressiveness"
+          "correction_mode": "Correction mode"
         }
       }
     }

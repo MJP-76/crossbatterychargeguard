@@ -1,7 +1,9 @@
 """Constants for Dual Battery Control."""
 
 DOMAIN = "dual_battery_control"
-PLATFORMS: list[str] = ["sensor"]
+PLATFORMS: list[str] = ["sensor", "switch", "number", "select"]
+CONF_CHECK_INTERVAL = "check_interval"
+DEFAULT_CHECK_INTERVAL = 300
 CONF_CREATE_DASHBOARD = "create_dashboard"
 CONF_DASHBOARD_TITLE = "dashboard_title"
 CONF_DASHBOARD_URL_PATH = "dashboard_url_path"
@@ -27,9 +29,7 @@ DEFAULT_DASHBOARD_URL_PATH = "dualbatterycontrol"
 
 CONF_CORRECTION_ENABLED = "correction_enabled"
 CONF_CORRECTION_MODE = "correction_mode"
-CONF_CORRECTION_AGGRESSIVENESS = "correction_aggressiveness"
 DEFAULT_CORRECTION_ENABLED = False
 DEFAULT_CORRECTION_MODE = "stop"
-DEFAULT_CORRECTION_AGGRESSIVENESS = 0.5
 SERVICE_PREVENT_CROSS_CHARGE = "prevent_cross_charge"
 SERVICE_SET_AUTO_CORRECTION = "set_auto_correction"

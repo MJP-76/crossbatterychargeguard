@@ -14,8 +14,13 @@ if TYPE_CHECKING:
 
 # Keywords used to identify battery-related entities
 _SOC_KEYWORDS = ["battery_capacity", "battery_soc", "soc", "state_of_charge", "state of charge", "battery_level"]
-_POWER_KEYWORDS = ["battery_power", "battery_power_charge"]
-_CURRENT_LIMIT_KEYWORDS = ["battery_charge_max_current", "charge_max_current", "current_limit", "charge_current_limit", "max_charge_current"]
+_POWER_KEYWORDS = ["battery_power", "battery_power_charge", "battery_charge_power"]
+_CURRENT_LIMIT_KEYWORDS = [
+    "battery_charge_max_current", "charge_max_current",
+    "current_limit", "charge_current_limit",
+    "max_charge_current", "max_charging_current",
+    "charging_current", "discharge_current", "max_current",
+]
 _HOUSE_LOAD_KEYWORDS = ["house_load", "home_consumption", "house_power", "consumption", "home_load", "grid_consumption"]
 
 
@@ -88,6 +93,13 @@ async def async_detect_entities(hass: HomeAssistant) -> dict:
     except Exception:
         er = None
 
+    dr = None
+    try:
+        from homeassistant.helpers.device_registry import async_get as get_dr
+        dr = get_dr(hass)
+    except Exception:
+        dr = None
+
     by_device: dict[str | None, list[dict]] = {}
     by_prefix: dict[str, list[dict]] = {}
 
@@ -96,12 +108,19 @@ async def async_detect_entities(hass: HomeAssistant) -> dict:
             "entity_id": state.entity_id,
             "name": (state.attributes.get("friendly_name") or state.entity_id.split(".")[-1]).lower().replace("_", " "),
             "device_class": state.attributes.get("device_class"),
+            "device_name": None,
         }
         device_id = None
+        device_name = None
         if er:
             entry = er.async_get(state.entity_id)
             if entry:
                 device_id = entry.device_id
+                if dr:
+                    device = dr.async_get(device_id)
+                    if device:
+                        device_name = device.name_by_user or device.name
+        info["device_name"] = device_name
         by_device.setdefault(device_id, []).append(info)
 
         # Also group by prefix for strategy 2
@@ -131,7 +150,10 @@ async def async_detect_entities(hass: HomeAssistant) -> dict:
             mapping = {}
             for key, prefix in zip(("a", "b"), sorted_prefixes[:2]):
                 ents = by_prefix[prefix]
-                mapping[key] = _map_device_entities(ents)
+                result = _map_device_entities(ents)
+                if not result.get("name"):
+                    result["name"] = prefix
+                mapping[key] = result
             if mapping.get("a", {}).get("soc"):
                 return mapping
 
@@ -165,13 +187,23 @@ def _group_by_prefix(info: dict, groups: dict[str, list[dict]]) -> None:
         return
 
 
+def _resolve_group_name(entities: list[dict]) -> str:
+    for e in entities:
+        dn = e.get("device_name")
+        if dn:
+            return dn
+    return ""
+
+
 def _map_device_entities(entities: list[dict]) -> dict:
     """Map entities from a device group to SOC/Power/CurrentLimit/HouseLoad."""
+    name = _resolve_group_name(entities)
     soc = _pick(entities, _SOC_KEYWORDS, device_class="battery")
     power = _pick(entities, _POWER_KEYWORDS, device_class="power")
     current_limit = _pick(entities, _CURRENT_LIMIT_KEYWORDS, preferred_domain="number")
     house_load = _pick(entities, _HOUSE_LOAD_KEYWORDS, device_class="power")
     return {
+        "name": name,
         "soc": soc,
         "power": power,
         "current_limit": current_limit,
@@ -196,13 +228,13 @@ async def async_build_defaults(hass: HomeAssistant) -> dict:
     )
     defaults = {}
     if "a" in detected:
-        defaults[CONF_BATTERY_A_NAME] = "Battery A"
+        defaults[CONF_BATTERY_A_NAME] = detected["a"].get("name") or "Battery A"
         defaults[CONF_BATTERY_A_SOC] = detected["a"].get("soc") or ""
         defaults[CONF_BATTERY_A_POWER] = detected["a"].get("power") or ""
         defaults[CONF_BATTERY_A_CURRENT_LIMIT] = detected["a"].get("current_limit") or ""
         defaults[CONF_BATTERY_A_HOUSE_LOAD] = detected["a"].get("house_load") or ""
     if "b" in detected:
-        defaults[CONF_BATTERY_B_NAME] = "Battery B"
+        defaults[CONF_BATTERY_B_NAME] = detected["b"].get("name") or "Battery B"
         defaults[CONF_BATTERY_B_SOC] = detected["b"].get("soc") or ""
         defaults[CONF_BATTERY_B_POWER] = detected["b"].get("power") or ""
         defaults[CONF_BATTERY_B_CURRENT_LIMIT] = detected["b"].get("current_limit") or ""

@@ -20,13 +20,11 @@ from .const import (
     CONF_BATTERY_B_NAME,
     CONF_BATTERY_B_POWER,
     CONF_BATTERY_B_SOC,
-    CONF_CORRECTION_AGGRESSIVENESS,
     CONF_CORRECTION_ENABLED,
     CONF_CORRECTION_MODE,
     CONF_CREATE_DASHBOARD,
     CONF_DASHBOARD_TITLE,
     CONF_DASHBOARD_URL_PATH,
-    DEFAULT_CORRECTION_AGGRESSIVENESS,
     DEFAULT_CORRECTION_ENABLED,
     DEFAULT_CORRECTION_MODE,
     DEFAULT_CREATE_DASHBOARD,
@@ -64,9 +62,6 @@ def _step_schema(defaults: dict[str, str | bool]) -> vol.Schema:
             vol.Required(CONF_BATTERY_B_HOUSE_LOAD, default=defaults.get(CONF_BATTERY_B_HOUSE_LOAD, "")): ENTITY_SELECTOR,
             vol.Optional(CONF_CORRECTION_ENABLED, default=defaults.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED)): bool,
             vol.Optional(CONF_CORRECTION_MODE, default=defaults.get(CONF_CORRECTION_MODE, DEFAULT_CORRECTION_MODE)): MODE_SELECTOR,
-            vol.Optional(CONF_CORRECTION_AGGRESSIVENESS, default=defaults.get(CONF_CORRECTION_AGGRESSIVENESS, DEFAULT_CORRECTION_AGGRESSIVENESS)): selector.NumberSelector(
-                selector.NumberSelectorConfig(min=0.0, max=1.0, step=0.1, mode=selector.NumberSelectorMode.SLIDER)
-            ),
         }
     )
 
