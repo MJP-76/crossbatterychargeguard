@@ -71,8 +71,14 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                                         ],
                                     },
                                     {
-                                        "type": "markdown",
-                                        "content": "## ⚙️ Current Control\n- Battery A: aligned\n- Battery B: aligned\n- Control goal: keep batteries aligned",
+                                        "type": "entities",
+                                        "title": "Controls",
+                                        "entities": [
+                                            "switch.dual_battery_control_auto_correction",
+                                            "number.dual_battery_control_check_interval",
+                                            "select.dual_battery_control_correction_mode",
+                                        ],
+                                        "show_state": True,
                                     },
                                     {
                                         "type": "markdown",
