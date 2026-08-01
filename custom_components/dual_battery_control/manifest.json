@@ -1,9 +1,11 @@
 {
   "domain": "dual_battery_control",
   "name": "Dual Battery Control",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "documentation": "https://github.com/MJP-76/ha-dual-battery-control",
-  "codeowners": ["@MJP-76"],
+  "codeowners": [
+    "@MJP-76"
+  ],
   "config_flow": true,
   "iot_class": "calculated",
   "requirements": []
