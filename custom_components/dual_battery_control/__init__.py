@@ -151,10 +151,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             update=True,
         )
 
+    async def _periodic_update_wrapper(now):
+        await _periodic_update(hass, entry, manager, corrector)
+
     interval = cfg.get(CONF_CHECK_INTERVAL, DEFAULT_CHECK_INTERVAL)
     unsub = async_track_time_interval(
         hass,
-        lambda now: _periodic_update(hass, entry, manager, corrector),
+        _periodic_update_wrapper,
         timedelta(seconds=interval),
     )
     entry.async_on_unload(unsub)
