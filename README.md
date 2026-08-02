@@ -15,7 +15,7 @@ Repository: `MJP-76/ha-dual-battery-control`
 HACS-compatible metadata is included at the repository root in `hacs.json`.
 The integration can create a Lovelace dashboard automatically from the entities you choose during setup, with separate battery blocks and live SOC/power trend cards.
 It is configured through Home Assistant's UI config flow, not `configuration.yaml`.
-Current release: `0.2.0`.
+Current release: `0.3.3`.
 Default dashboard URL path: `dualbatterycontrol`.
 
 ## Background
@@ -33,6 +33,10 @@ This component was created to solve cross-charging between two batteries connect
 - manifest and packaging metadata
 - tests
 - config flow and options flow for selecting battery entities, dashboard, and correction settings
+- WhatsApp notifications when cross-charge corrections are applied
+- enhanced correction history with amps, action type, and new limit per event
+- dashboard control entities (switch, number, select) for auto-correction, check interval, and correction mode
+- auto-calculated aggressiveness based on cross-charge severity
 - two services: `prevent_cross_charge` (manual trigger with dry-run mode) and `set_auto_correction` (toggle)
 
 ## Support me
