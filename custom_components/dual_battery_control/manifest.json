@@ -1,7 +1,7 @@
 {
   "domain": "dual_battery_control",
   "name": "Dual Battery Control",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "documentation": "https://github.com/MJP-76/ha-dual-battery-control",
   "codeowners": [
     "@MJP-76"

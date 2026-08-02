@@ -63,13 +63,24 @@ class BatteryManager:
             repair_issue=repair_issue_payload(issue),
         )
 
-    def record_stop_event(self, battery: str, reason: str, status: str) -> None:
+    def record_stop_event(
+        self,
+        battery: str,
+        reason: str,
+        status: str,
+        amps: float | None = None,
+        action: str | None = None,
+        new_limit: float | None = None,
+    ) -> None:
         self.stop_events.appendleft(
             StopEvent(
                 timestamp=datetime.now(timezone.utc).isoformat(),
                 battery=battery,
                 reason=reason,
                 status=status,
+                amps=amps,
+                action=action,
+                new_limit=new_limit,
             )
         )
         if self.hass is not None:

@@ -39,6 +39,9 @@ class StopEventSensor(SensorEntity):
                 "battery": event.battery,
                 "reason": event.reason,
                 "status": event.status,
+                "amps": event.amps,
+                "action": event.action,
+                "new_limit": event.new_limit,
             }
             for event in events[:5]
         ]
@@ -47,6 +50,9 @@ class StopEventSensor(SensorEntity):
             "latest_battery": getattr(latest, "battery", None),
             "latest_reason": getattr(latest, "reason", None),
             "latest_status": getattr(latest, "status", None),
+            "latest_amps": getattr(latest, "amps", None),
+            "latest_action": getattr(latest, "action", None),
+            "latest_new_limit": getattr(latest, "new_limit", None),
             "recent_events": recent,
         }
 
@@ -74,7 +80,10 @@ class StopEventSummarySensor(SensorEntity):
         latest = events[0] if events else None
         if latest is None:
             return "No stop events yet"
-        return f"{latest.timestamp} — {latest.battery} ({latest.status}): {latest.reason}"
+        parts = [f"{latest.timestamp} — {latest.battery} ({latest.status}): {latest.reason}"]
+        if latest.amps is not None:
+            parts.append(f"{latest.amps}A {latest.action} → {latest.new_limit}A")
+        return " | ".join(parts)
 
     def refresh(self) -> None:
         self.async_write_ha_state()

@@ -49,6 +49,9 @@ class StopEvent:
     battery: str
     reason: str
     status: str
+    amps: float | None = None
+    action: str | None = None
+    new_limit: float | None = None
 
 
 @dataclass(slots=True, frozen=True)

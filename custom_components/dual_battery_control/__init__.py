@@ -13,9 +13,11 @@ from homeassistant.helpers.event import async_track_time_interval
 from .const import (
     CONF_CHECK_INTERVAL,
     CONF_CORRECTION_ENABLED,
+    CONF_WHATSAPP_TARGET,
     DEFAULT_CHECK_INTERVAL,
     DEFAULT_CORRECTION_ENABLED,
     DEFAULT_LOOP_DURATION,
+    DEFAULT_WHATSAPP_TARGET,
     DOMAIN,
     SERVICE_PREVENT_CROSS_CHARGE,
     SERVICE_SET_AUTO_CORRECTION,
@@ -58,12 +60,47 @@ async def _periodic_update(hass, entry, manager, corrector):
 
     result = manager.detect()
 
+    correction_enabled = cfg.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED)
+    correction_result = None
+    if correction_enabled:
+        correction_result = await corrector.evaluate_and_apply(result)
+
     for event in result.events:
         manager.record_stop_event(event.source, event.reason, event.severity.value)
 
-    correction_enabled = cfg.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED)
-    if correction_enabled:
-        await corrector.evaluate_and_apply(result)
+    if correction_result and correction_result.applied:
+        for action in correction_result.actions:
+            amps = action.service_data.get("value")
+            new_limit = amps
+            action_type = "stop" if amps == 0 else "reduce"
+            manager.record_stop_event(
+                action.entity_id,
+                action.reason,
+                "correction",
+                amps=amps,
+                action=action_type,
+                new_limit=new_limit,
+            )
+        _send_whatsapp_notification(hass, cfg, correction_result)
+
+
+def _send_whatsapp_notification(hass, cfg, correction_result):
+    target = cfg.get(CONF_WHATSAPP_TARGET, DEFAULT_WHATSAPP_TARGET)
+    if not target:
+        return
+    lines = ["Cross-charge correction applied:"]
+    for action in correction_result.actions:
+        amps = action.service_data.get("value")
+        lines.append(f"- {action.reason} ({amps}A)")
+    try:
+        hass.services.async_call(
+            "whatsapp",
+            "send_message",
+            {"target": target, "message": "\n".join(lines)},
+            blocking=False,
+        )
+    except Exception:
+        _LOGGER.warning("WhatsApp notification failed", exc_info=True)
 
 
 async def _async_service_prevent_cross_charge(hass, call):
@@ -73,12 +110,31 @@ async def _async_service_prevent_cross_charge(hass, call):
     dry_run = call.data.get("dry_run", False)
 
     result = manager.detect()
+
+    correction_enabled = manager.entry_data.get(CONF_CORRECTION_ENABLED, DEFAULT_CORRECTION_ENABLED) if manager.entry_data else False
+    correction_result = None
+    if correction_enabled and not dry_run:
+        correction_result = await corrector.evaluate_and_apply(result)
+
     for event in result.events:
         manager.record_stop_event(event.source, event.reason, event.severity.value)
 
-    if not dry_run:
-        await corrector.evaluate_and_apply(result)
-    else:
+    if correction_result and correction_result.applied:
+        for action in correction_result.actions:
+            amps = action.service_data.get("value")
+            new_limit = amps
+            action_type = "stop" if amps == 0 else "reduce"
+            manager.record_stop_event(
+                action.entity_id,
+                action.reason,
+                "correction",
+                amps=amps,
+                action=action_type,
+                new_limit=new_limit,
+            )
+        _send_whatsapp_notification(hass, manager.entry_data or {}, correction_result)
+
+    if dry_run:
         _LOGGER.info("Dry-run cross-charge prevention: %d events", len(result.events))
 
 

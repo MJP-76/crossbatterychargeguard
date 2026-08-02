@@ -23,9 +23,11 @@ from .const import (
     CONF_CREATE_DASHBOARD,
     CONF_DASHBOARD_TITLE,
     CONF_DASHBOARD_URL_PATH,
+    CONF_WHATSAPP_TARGET,
     DEFAULT_CREATE_DASHBOARD,
     DEFAULT_DASHBOARD_TITLE,
     DEFAULT_DASHBOARD_URL_PATH,
+    DEFAULT_WHATSAPP_TARGET,
     DOMAIN,
 )
 
@@ -50,6 +52,7 @@ def _step_schema(defaults: dict[str, str | bool]) -> vol.Schema:
             vol.Required(CONF_BATTERY_B_POWER, default=defaults.get(CONF_BATTERY_B_POWER, "")): ENTITY_SELECTOR,
             vol.Required(CONF_BATTERY_B_CURRENT_LIMIT, default=defaults.get(CONF_BATTERY_B_CURRENT_LIMIT, "")): ENTITY_SELECTOR,
             vol.Required(CONF_BATTERY_B_HOUSE_LOAD, default=defaults.get(CONF_BATTERY_B_HOUSE_LOAD, "")): ENTITY_SELECTOR,
+            vol.Optional(CONF_WHATSAPP_TARGET, default=defaults.get(CONF_WHATSAPP_TARGET, DEFAULT_WHATSAPP_TARGET)): str,
         }
     )
 
