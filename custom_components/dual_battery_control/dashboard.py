@@ -81,8 +81,26 @@ def build_dashboard_config(hass: HomeAssistant, entry: ConfigEntry) -> dict:
                                         "show_state": True,
                                     },
                                     {
-                                        "type": "markdown",
-                                        "content": "## 📊 Analysis\n- Battery count: 2\n- Cross-charge events: 1\n- Imbalance: 14%\n- Repair: warning ⚠️",
+                                        "type": "history-graph",
+                                        "title": "⚡ Current Limit Trend",
+                                        "hours_to_show": 24,
+                                        "refresh_interval": 60,
+                                        "entities": [
+                                            {"entity": data[CONF_BATTERY_A_CURRENT_LIMIT], "name": f"{battery_a_name} Limit"},
+                                            {"entity": data[CONF_BATTERY_B_CURRENT_LIMIT], "name": f"{battery_b_name} Limit"},
+                                        ],
+                                    },
+                                    {
+                                        "type": "history-graph",
+                                        "title": "🔄 Correction Events",
+                                        "hours_to_show": 24,
+                                        "refresh_interval": 60,
+                                        "entities": [
+                                            {
+                                                "entity": "sensor.dual_battery_control_stop_event_count",
+                                                "name": "Stop Events",
+                                            },
+                                        ],
                                     },
                                 ],
                             },
