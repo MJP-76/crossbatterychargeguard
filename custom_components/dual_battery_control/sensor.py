@@ -18,7 +18,7 @@ class StopEventSensor(SensorEntity):
 
     def __init__(self, manager) -> None:
         self._manager = manager
-        self._attr_unique_id = f"{DOMAIN}_stop_event_count"
+        self._attr_unique_id = f"stop_event_count"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, DOMAIN)},
             name="Dual Battery Control",
@@ -67,7 +67,7 @@ class StopEventSummarySensor(SensorEntity):
 
     def __init__(self, manager) -> None:
         self._manager = manager
-        self._attr_unique_id = f"{DOMAIN}_last_stop_summary"
+        self._attr_unique_id = f"last_stop_summary"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, DOMAIN)},
             name="Dual Battery Control",
